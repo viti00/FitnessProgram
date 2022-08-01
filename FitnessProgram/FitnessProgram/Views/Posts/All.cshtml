@@ -1,0 +1,31 @@
+﻿@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/AllPosts.css" />
+}
+
+
+<div class="body-section">
+    <section class="elements-container scroll">
+        <div class="container d-flex flex-wrap align-items-center">
+            <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="https://bbteamcdn.com/content/originals/4847.jpg" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Благодарение на него отслабнах</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <p class="link-muted me-2"><i class="fa fa-thumbs-up"></i>132</p>
+                                <p class="link-muted"><i class="fa fa-thumbs-down"></i>15</p>
+                            </div>
+                            <p class="link-muted"><i class="fas fa-comment"></i> 500</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+</div>
+
+@section Scripts{
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+}
