@@ -1,7 +1,7 @@
 ﻿namespace FitnessProgram.Models.BestResult
 {
-    using FitnessProgram.Data;
     using System.ComponentModel.DataAnnotations;
+    using static FitnessProgram.Data.DataConstants;
 
     public class BestResultFormModel
     {
@@ -14,7 +14,9 @@
         public string ImageUrlAfter { get; init; }
 
         [Required]
-        [StringLength(DataConstants.StoryMaxLegth, MinimumLength = DataConstants.StoryMinLegth)]
+        [StringLength(BestResultConstants.StoryMaxLegth, MinimumLength = BestResultConstants.StoryMinLegth)]
         public string Story { get; init; }
+
+
     }
 }

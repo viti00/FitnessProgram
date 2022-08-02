@@ -1,15 +1,16 @@
-﻿using FitnessProgram.Data;
-using System.ComponentModel.DataAnnotations;
-
-namespace FitnessProgram.Models.Partners
+﻿namespace FitnessProgram.Models.Partners
 {
+    using System.ComponentModel.DataAnnotations;
+    using static FitnessProgram.Data.DataConstants;
+
     public class PartnerFormModel
     {
         [Required]
+        [StringLength(PartnerConstants.NameMaxLegth)]
         public string Name { get; init; }
 
         [Required]
-        [StringLength(DataConstants.DescriptionMaxLegth, MinimumLength =DataConstants.DescriptionMaxLegth)]
+        [StringLength(PartnerConstants.DescriptionMaxLegth, MinimumLength =PartnerConstants.DescriptionMaxLegth)]
         public string Description { get; init; }
 
         [Required]
@@ -21,6 +22,7 @@ namespace FitnessProgram.Models.Partners
         public string Url { get; init; }
 
         [Required]
+        [StringLength(PartnerConstants.PromoCodeMaxLegth, MinimumLength =PartnerConstants.PromoCodeMinLegth)]
         public string PromoCode { get; init; }
     }
 }

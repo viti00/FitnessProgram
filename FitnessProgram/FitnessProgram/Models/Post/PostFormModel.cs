@@ -1,12 +1,12 @@
 ﻿namespace FitnessProgram.Models.Post
 {
-    using FitnessProgram.Data;
     using System.ComponentModel.DataAnnotations;
+    using static FitnessProgram.Data.DataConstants;
 
     public class PostFormModel
     {
         [Required]
-        [StringLength(DataConstants.TitleMaxLength, MinimumLength = DataConstants.TitleMinLength)]
+        [StringLength(PostConstants.TitleMaxLength, MinimumLength = PostConstants.TitleMinLength)]
         public string Title { get; init; }
 
         [Url]
@@ -14,7 +14,7 @@
         public string? ImageUrl { get; init; }
 
         [Required]
-        [StringLength(DataConstants.TextMaxLegth, MinimumLength = DataConstants.TextMinLegth)]
+        [StringLength(PostConstants.TextMaxLegth, MinimumLength = PostConstants.TextMinLegth)]
         public string Text { get; init; }
 
     }
