@@ -1,0 +1,36 @@
+﻿@model PostFormModel
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/AllCreateAndEditPages.css" />
+}
+
+<div class="section">
+    <div class="color-overlay"></div>
+    <div class="wrapper">
+        <form method="post">
+            <div class="logo">
+                <img src="~/lib/Images/logo.png" alt="">
+            </div>
+            <div class="text-center mt-4 name">
+                <h2>Edit post</h2>
+            </div>
+            <div class="form-group">
+                <label asp-for=Title>Title<span class="text-danger">*</span></label>
+                <input asp-for="Title" class="form-control" placeholder="Best trainer...">
+                <span asp-validation-for="Title" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for=ImageUrl></label>
+                <input asp-for="ImageUrl" class="form-control" placeholder="https://image...">
+                <span asp-validation-for="ImageUrl" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for=Text>Text<span class="text-danger">*</span></label>
+                <textarea rows="5" asp-for="Text" class="form-control" placeholder="I was very fat..."></textarea>
+                <span asp-validation-for="Text" class="small text-danger"></span>
+            </div>
+            <button type="submit" class="btn custom-btn">Edit Post</button>
+        </form>
+    </div>
+
+</div>
