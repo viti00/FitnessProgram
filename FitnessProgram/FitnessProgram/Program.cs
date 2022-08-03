@@ -2,6 +2,7 @@ using FitnessProgram.Infrastructure;
 using FitnessProgram.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using FitnessProgram.Services.PostServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +12,18 @@ builder.Services.AddDbContext<FitnessProgramDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.SignIn.RequireConfirmedAccount = false;
+})
     .AddEntityFrameworkStores<FitnessProgramDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IPostService, PostService>();
 
 var app = builder.Build();
 
