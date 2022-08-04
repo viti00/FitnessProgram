@@ -53,7 +53,10 @@
         public IActionResult Details(string id)
         {
             ViewData["Title"] = "Post Details";
-            return View();
+
+            var post = postService.GetPostById(id);
+
+            return View(post);
         }
     }
 }

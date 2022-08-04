@@ -60,8 +60,11 @@
                     Text = x.Text,
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                     LikesCount = x.Likes.Count(),
-                    Comments = x.Comments,
-                    CreatorId = x.CreatorId
+                    Comments = x.Comments.OrderBy(x=> x.CreatedOn).ToList(),
+                    Creator = new UserViewModel
+                    {
+                        Id = x.CreatorId
+                    }
                 }).FirstOrDefault();
 
             return post;

@@ -15,10 +15,20 @@ namespace FitnessProgram.Models.Post
 
         public string CreatedOn { get; init; }
 
-        public int LikesCount { get; init; }
+        public int LikesCount { get; set; }
 
-        public virtual ICollection<Comment> Comments { get; init; }
+        public ICollection<Comment> Comments { get; init; }
 
-        public string CreatorId { get; init; }
+        public UserViewModel Creator { get; init; }
+    }
+
+
+    public class UserViewModel
+    {
+        public string Id { get; init; }
+
+        public string? ProfilePicture { get; init; }
+
+        public string? Username { get; init; }
     }
 }
