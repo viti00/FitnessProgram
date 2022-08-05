@@ -2,6 +2,7 @@
     display: none;
     -ms-overflow-style: none;
 }
+
 .card {
     border-radius: 8px;
     border: 1px solid #cccccc;
@@ -15,20 +16,21 @@
     transition: all linear 200ms;
     margin: 40px 30px 30px 30px;
     background-color: grey;
-    position:relative;
+    position: relative;
 }
 
-.card h5{
-    color: white;
-}
+    .card h5 {
+        color: white;
+    }
 
-.card p{
-    color:white;
-}
+    .card p {
+        color: white;
+    }
 
 a:link {
     text-decoration: none;
 }
+
 .card:hover {
     transform: scale(1.1);
     transition: all linear 200ms;
@@ -39,13 +41,13 @@ a:link {
 
 .elements-container {
     min-width: 1200px;
-    max-width: 1200px;
+    max-width: 1220px;
     min-height: 700px;
-    max-height: 700px;
+    max-height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 40px auto;
+    margin: 40px 30px 30px 30px;
     border-radius: 15px;
     background: rgba(128, 128, 128, 0.4);
 }
@@ -59,7 +61,6 @@ a:link {
     width: 100%;
     height: 100vh;
     background-color: black;
-    /*background: url(/lib/Images/posts-all-background.jpg) center top fixed;*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,25 +70,24 @@ a:link {
 .scroll {
     margin: 5px;
     padding: 5px;
-    width: 500px;
-    height: 110px;
+    width: auto;
+    height: auto;
     overflow: scroll;
     text-align: justify;
 }
 
-.no-post-container{
+.no-post-container {
     background-color: white;
     color: black;
     border-radius: 15px;
     text-align: center;
 }
 
-.custom{
+.custom {
     width: 100%;
     height: 100%;
     background-color: yellow;
     border: none;
-    
     color: black;
     text-align: center;
     display: flex;
@@ -96,21 +96,30 @@ a:link {
     text-align: center;
 }
 
-.custom:hover {
-    background-color: red;
-}
+    .custom:hover {
+        background-color: red;
+    }
 
 .btn-container {
-     width: 50px;
-     height: 100%;
-     margin: 0px 0px 0px 0px;
+    width: 50px;
+    height: 100%;
 }
 
 .left {
     border-bottom-left-radius: 15px;
     border-top-left-radius: 15px;
 }
+
 .right {
     border-bottom-right-radius: 15px;
     border-top-right-radius: 15px;
+}
+
+.create-btn-container {
+    position: relative;
+    margin: 0 auto;
+    clear: left;
+    height: auto;
+    z-index: 0;
+    text-align: center;
 }

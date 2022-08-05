@@ -13,10 +13,14 @@
     }
 }
 
+
 <div class="body-section">
-    
-    <section class="elements-container scroll">
-       
+
+    <section class="row">
+        <section class="col-12 elements-container scroll">
+        <div class="create-btn-container">
+        <a class="btn" asp-controller="Posts" asp-action="Create">Create Post</a>
+    </div>
         @if (Model.PostCount == 0)
         {
             
@@ -37,7 +41,7 @@
                 @foreach (var post in Model.Posts)
                 {
                      <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@post.PostId">
-                        <div class="card" style="width: 18rem;">
+                        <div class="card" style="width: 18rem; height: 17rem;">
                             <img class="card-img-top" src="@post.ImageUrl" alt="Image">
                             <div class="card-body">
                             <h5 class="card-title">@post.Title</h5>
@@ -61,7 +65,9 @@
             </div>
         }
     </section>
+    </section>
 </div>
+
 
 @section Scripts{
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>

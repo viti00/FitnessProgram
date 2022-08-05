@@ -42,7 +42,7 @@
             }
 
             var posts = context.Posts
-                .OrderBy(x=> x.CreatedOn)
+                .OrderByDescending(x=> x.CreatedOn)
                 .Skip((currPage-1)*postPerPage)
                 .Take(postPerPage)
                 .Select(x => new PostViewModel
@@ -80,7 +80,7 @@
                     Text = x.Text,
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                     LikesCount = x.Likes.Count(),
-                    Comments = x.Comments.OrderBy(x=> x.CreatedOn).ToList(),
+                    Comments = x.Comments.OrderByDescending(x=> x.CreatedOn).ToList(),
                     Creator = new UserViewModel
                     {
                         Id = x.CreatorId
