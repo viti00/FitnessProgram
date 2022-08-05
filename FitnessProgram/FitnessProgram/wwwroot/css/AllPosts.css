@@ -15,7 +15,7 @@
     transition: all linear 200ms;
     margin: 40px 30px 30px 30px;
     background-color: grey;
-    opacity: 0.9;
+    position:relative;
 }
 
 .card h5{
@@ -41,14 +41,13 @@ a:link {
     min-width: 1200px;
     max-width: 1200px;
     min-height: 700px;
-    max-height: auto;
-    position: relative;
+    max-height: 700px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 80px auto;
+    margin: 40px auto;
     border-radius: 15px;
-
+    background: rgba(128, 128, 128, 0.4);
 }
 
 .elements-container::-webkit-scrollbar {
@@ -57,10 +56,10 @@ a:link {
 }
 
 .body-section {
-    position: relative;
     width: 100%;
     height: 100vh;
-    background: url(/lib/Images/posts-all-background.jpg) center top fixed;
+    background-color: black;
+    /*background: url(/lib/Images/posts-all-background.jpg) center top fixed;*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76,6 +75,42 @@ a:link {
     text-align: justify;
 }
 
-h2{
-    color: white;
+.no-post-container{
+    background-color: white;
+    color: black;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.custom{
+    width: 100%;
+    height: 100%;
+    background-color: yellow;
+    border: none;
+    
+    color: black;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.custom:hover {
+    background-color: red;
+}
+
+.btn-container {
+     width: 50px;
+     height: 100%;
+     margin: 0px 0px 0px 0px;
+}
+
+.left {
+    border-bottom-left-radius: 15px;
+    border-top-left-radius: 15px;
+}
+.right {
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
 }

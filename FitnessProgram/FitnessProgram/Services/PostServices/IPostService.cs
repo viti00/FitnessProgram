@@ -4,7 +4,7 @@
 
     public interface IPostService
     {
-        public List<PostViewModel> GetAll();
+        public AllPostsQueryViewModel GetAll(int currPage, int postPerPage);
 
         public void Create(PostFormModel model, string userId);
 

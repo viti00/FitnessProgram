@@ -15,13 +15,13 @@
             this.postService = postService;
         }
 
-        public IActionResult All()
+        public IActionResult All([FromQuery] AllPostsQueryViewModel query)
         {
             ViewData["Title"] = "Posts";
 
-            var posts = postService.GetAll();
+            var AllPostModel = postService.GetAll(query.CurrentPage, AllPostsQueryViewModel.PostPerPage);
 
-            return View(posts);
+            return View(AllPostModel);
         }
 
         public IActionResult Create()

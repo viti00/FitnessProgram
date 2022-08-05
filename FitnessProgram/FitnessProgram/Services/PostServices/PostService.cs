@@ -14,6 +14,7 @@
 
         public void Create(PostFormModel model, string creatorId)
         {
+
             var post = new Post
             {
                 Title = model.Title,
@@ -29,10 +30,21 @@
             context.SaveChanges();
         }
 
-        public List<PostViewModel> GetAll()
+        public AllPostsQueryViewModel GetAll(int currPage, int postPerPage)
         {
+            var totalPosts = context.Posts.Count();
+
+            var maxPage = (int)Math.Ceiling((double)totalPosts / postPerPage);
+
+            if (currPage > maxPage)
+            {
+                currPage = maxPage;
+            }
+
             var posts = context.Posts
                 .OrderBy(x=> x.CreatedOn)
+                .Skip((currPage-1)*postPerPage)
+                .Take(postPerPage)
                 .Select(x => new PostViewModel
                 {
                     PostId = x.Id,
@@ -45,7 +57,15 @@
                 })
                 .ToList();
 
-            return posts;
+            var result = new AllPostsQueryViewModel
+            {
+                Posts = posts,
+                CurrentPage = currPage,
+                MaxPage = maxPage,
+                PostCount = totalPosts
+            };
+
+            return result;
         }
 
         public PostDetailsModel GetPostById(string postId)
