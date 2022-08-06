@@ -10,7 +10,7 @@
 
 <div class="section">
     <div class="color-overlay"></div>
-    <div class="wrapper">
+    <div class="wrapper col-sm-12 col-md-10 offset-md-1 col-lg-6 offset-lg-3 col-xl-3 offset-xl-4">
         <form method="post">
             <div class="logo">
                 <img src="~/lib/Images/logo.png" alt="">
@@ -25,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for=Description>Description<span class="text-danger">*</span></label>
-                <textarea rows="5" asp-for="Description" class="form-control" placeholder="We are the coollest brand..."></textarea>
+                <textarea rows="3" asp-for="Description" class="form-control" placeholder="We are the coollest brand..."></textarea>
                 <span asp-validation-for="Description" class="small text-danger"></span>
             </div>
             <div class="form-group">
