@@ -6,7 +6,6 @@ namespace FitnessProgram.Controllers
     {
         public IActionResult Create()
         {
-            ViewData["Title"] = "Become Customer";
             return View();
         }
     }

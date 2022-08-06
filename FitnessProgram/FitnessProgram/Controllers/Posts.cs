@@ -45,13 +45,11 @@
 
         public IActionResult Edit()
         {
-            ViewData["Title"] = "Edit Post";
             return View();
         }
 
         public IActionResult Details(string id)
         {
-            ViewData["Title"] = "Post Details";
 
             var post = postService.GetPostById(id);
 
