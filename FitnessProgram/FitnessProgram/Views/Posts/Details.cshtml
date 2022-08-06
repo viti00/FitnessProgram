@@ -9,8 +9,8 @@
 }
 
 
- <div class="section">
-    <div class="color-overlay"></div>
+    <div class="section">
+        <div class="color-overlay"></div>
         <div class="container my-5 py-5">
             <div class="row d-flex justify-content-center">
                 <div class="col-md-12 col-lg-10 col-xl-8">
@@ -26,7 +26,16 @@
                                         Posted on - @Model.CreatedOn
                                     </p>
                                 </div>
+                                <div class="dropdown">
+                                    <button class="dropbtn">...</button>
+                                    <div class="dropdown-content">
+                                        <a  asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                                        <a asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                                    </div>
+                                </div>
+                                
                             </div>
+                            
                             <p class="mt-3 mb-4 pb-2 text-center">
                                 <img class=""
                                  src="@Model.ImageUrl" alt="avatar" width="250" height="200" />
@@ -90,7 +99,7 @@
         </div>
     </div>
 
- </div>
+</div>
 
 
 @*<div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">

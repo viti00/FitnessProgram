@@ -7,15 +7,15 @@
     {
         [Required]
         [StringLength(PostConstants.TitleMaxLength, MinimumLength = PostConstants.TitleMinLength)]
-        public string Title { get; init; }
+        public string Title { get; set; }
 
         [Url]
         [Display(Name ="Image URL")]
-        public string? ImageUrl { get; init; }
+        public string? ImageUrl { get; set; }
 
         [Required]
         [StringLength(PostConstants.TextMaxLegth, MinimumLength = PostConstants.TextMinLegth)]
-        public string Text { get; init; }
+        public string Text { get; set; }
 
     }
 }

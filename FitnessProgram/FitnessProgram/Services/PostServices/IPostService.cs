@@ -9,5 +9,9 @@
         public void Create(PostFormModel model, string userId);
 
         public PostDetailsModel GetPostById(string postId);
+
+        public PostFormModel CreateEditModel(string postId);
+
+        public void Edit(PostFormModel model, string postId);
     }
 }

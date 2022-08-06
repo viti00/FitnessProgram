@@ -80,7 +80,7 @@
                     Text = x.Text,
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                     LikesCount = x.Likes.Count(),
-                    Comments = x.Comments.OrderByDescending(x=> x.CreatedOn).ToList(),
+                    Comments = x.Comments.OrderByDescending(x => x.CreatedOn).ToList(),
                     Creator = new UserViewModel
                     {
                         Id = x.CreatorId
@@ -88,6 +88,32 @@
                 }).FirstOrDefault();
 
             return post;
+        }
+
+        public PostFormModel CreateEditModel(string postId)
+        {
+            var post = GetPostById(postId);
+
+            var model = new PostFormModel
+            {
+                Title = post.Title,
+                ImageUrl = post.ImageUrl,
+                Text = post.Text
+            };
+
+            return model;
+        }
+
+        public void Edit(PostFormModel model, string postId)
+        {
+            var post = context.Posts.FirstOrDefault(x => x.Id == postId);
+
+            post.Title = model.Title;
+            post.ImageUrl = model.ImageUrl;
+            post.Text = model.Text;
+
+            context.Posts.Update(post);
+            context.SaveChanges();
         }
     }
 }

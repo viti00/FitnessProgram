@@ -25,7 +25,6 @@
         [Authorize]
         public IActionResult Create()
         {
-            ViewData["Title"] = "Create Post";
             return View();
         }
 
@@ -43,9 +42,26 @@
             return RedirectToAction("All", "Posts");
         }
 
-        public IActionResult Edit()
+        [Authorize]
+        public IActionResult Edit(string id)
         {
-            return View();
+            var model = postService.CreateEditModel(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Edit(PostFormModel edit, string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(edit);
+            }
+
+            postService.Edit(edit, id);
+
+            return Redirect($"/Posts/Details/{id}");
         }
 
         public IActionResult Details(string id)
