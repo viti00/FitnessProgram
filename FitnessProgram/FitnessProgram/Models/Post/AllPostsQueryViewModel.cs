@@ -4,7 +4,7 @@
     {
         public IEnumerable<PostViewModel> Posts { get; init; }
 
-        public const int PostPerPage = 6;
+        public const int PostPerPage = 3;
 
         public int CurrentPage { get; init; } = 1;
 

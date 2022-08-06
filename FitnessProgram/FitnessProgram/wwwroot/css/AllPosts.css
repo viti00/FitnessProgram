@@ -14,7 +14,7 @@
     width: 300px;
     height: 300px;
     transition: all linear 200ms;
-    margin: 40px 30px 30px 30px;
+    margin: 50px 30px 40px 30px;
     background-color: grey;
     position: relative;
 }
@@ -40,22 +40,19 @@ a:link {
 }
 
 .elements-container {
-    min-width: 1200px;
     max-width: 1220px;
-    min-height: 700px;
     max-height: auto;
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin: 40px 30px 30px 30px;
     border-radius: 15px;
     background: rgba(128, 128, 128, 0.4);
+    margin: 5px;
+    padding: 5px;
+    width: auto;
+    height: auto;
+    position: relative;
 }
 
-.elements-container::-webkit-scrollbar {
-    display: none;
-    -ms-overflow-style: none;
-}
 
 .body-section {
     width: 100%;
@@ -65,18 +62,12 @@ a:link {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-}
-
-.scroll {
-    margin: 5px;
-    padding: 5px;
-    width: auto;
-    height: auto;
-    overflow: scroll;
-    text-align: justify;
+    position: relative;
 }
 
 .no-post-container {
+    width: 400px;
+    height: 100px;
     background-color: white;
     color: black;
     border-radius: 15px;
@@ -93,12 +84,11 @@ a:link {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: center;
 }
 
-    .custom:hover {
+.custom:hover {
         background-color: red;
-    }
+}
 
 .btn-container {
     width: 50px;
@@ -115,11 +105,34 @@ a:link {
     border-top-right-radius: 15px;
 }
 
-.create-btn-container {
-    position: relative;
-    margin: 0 auto;
-    clear: left;
-    height: auto;
-    z-index: 0;
+.btn-create-container {
+    top: 10px;
+    position: absolute;
     text-align: center;
+}
+
+.create-btn{
+    color: black;
+    background-color: yellow;
+    text-align: center;
+}
+
+.create-btn:hover{
+    background-color: red;
+}
+
+.page-number-container {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+}
+
+.color-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: grey;
+    width: 100%;
+    height: 100%;
+    background: rgba(128, 128, 128, 0.3);
 }

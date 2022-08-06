@@ -17,13 +17,12 @@
 
         public IActionResult All([FromQuery] AllPostsQueryViewModel query)
         {
-            ViewData["Title"] = "Posts";
-
             var AllPostModel = postService.GetAll(query.CurrentPage, AllPostsQueryViewModel.PostPerPage);
 
             return View(AllPostModel);
         }
 
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["Title"] = "Create Post";
