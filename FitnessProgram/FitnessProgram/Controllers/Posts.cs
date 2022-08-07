@@ -36,7 +36,7 @@
             {
                 return View(post);
             }
-            var userId = ClaimsPrincipalExtension.GetId(User);
+            var userId = User.GetId();
 
             postService.Create(post, userId);
             return RedirectToAction("All", "Posts");
