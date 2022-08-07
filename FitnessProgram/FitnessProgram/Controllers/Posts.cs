@@ -1,10 +1,10 @@
 ﻿namespace FitnessProgram.Controllers
 {
+    using FitnessProgram.Infrastructure;
     using FitnessProgram.Models.Post;
     using FitnessProgram.Services.PostServices;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System.Security.Claims;
 
     public class Posts : Controller
     {
@@ -36,7 +36,7 @@
             {
                 return View(post);
             }
-            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = ClaimsPrincipalExtension.GetId(User);
 
             postService.Create(post, userId);
             return RedirectToAction("All", "Posts");
