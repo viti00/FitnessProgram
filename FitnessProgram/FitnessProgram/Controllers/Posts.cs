@@ -47,9 +47,9 @@
         {
             var userId = User.GetId();
 
-            if(postService.IsCreator(id, userId))
+            if(!postService.IsCreator(id, userId))
             {
-                return RedirectToAction("All", "Posts");
+                return Unauthorized();
             }
 
             var model = postService.CreateEditModel(id);
