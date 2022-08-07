@@ -46,13 +46,19 @@
         public IActionResult Edit(string id)
         {
             var userId = User.GetId();
+            var post = postService.GetPostById(id);
 
-            if(!postService.IsCreator(id, userId))
+            if(post == null)
+            {
+                return BadRequest();
+            }
+
+            if(post.CreatorId != userId)
             {
                 return Unauthorized();
             }
 
-            var model = postService.CreateEditModel(id);
+            var model = postService.CreateEditModel(post);
 
             return View(model);
         }
@@ -73,10 +79,35 @@
 
         public IActionResult Details(string id)
         {
+            var post = postService.GetPostDetails(id);
 
-            var post = postService.GetPostById(id);
+            if(post == null)
+            {
+                return BadRequest();
+            }
 
             return View(post);
+        }
+
+        [Authorize]
+        public IActionResult Delete(string id)
+        {
+            var userId = User.GetId();
+            var post = postService.GetPostById(id);
+
+            if(post == null)
+            {
+                BadRequest();
+            }
+
+            if(post.CreatorId != userId)
+            {
+                return Unauthorized();
+            }
+
+            postService.Delete(post);
+
+            return RedirectToAction("All", "Posts");
         }
     }
 }

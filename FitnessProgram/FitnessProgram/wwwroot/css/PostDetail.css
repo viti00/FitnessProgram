@@ -55,11 +55,13 @@
     display: block;
 }
 
-.dropdown-content a:hover {
-    background-color: #ddd;
-    border-radius: 15px;
-}
+    .dropdown-content a:hover {
+        background-color: #ddd;
+        border-radius: 15px;
+        cursor: pointer;
+    }
 
-.dropdown:hover .dropdown-content {
-    display: block;
-}
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }

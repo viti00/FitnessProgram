@@ -1,5 +1,6 @@
 ﻿namespace FitnessProgram.Services.PostServices
 {
+    using FitnessProgram.Data.Models;
     using FitnessProgram.Models.Post;
 
     public interface IPostService
@@ -8,12 +9,14 @@
 
         public void Create(PostFormModel model, string userId);
 
-        public PostDetailsModel GetPostById(string postId);
+        public PostDetailsModel GetPostDetails(string postId);
 
-        public PostFormModel CreateEditModel(string postId);
+        public PostFormModel CreateEditModel(Post post);
 
         public void Edit(PostFormModel model, string postId);
 
-        public bool IsCreator(string postId, string userId);
+        public void Delete(Post post);
+
+        public Post GetPostById(string postId);
     }
 }

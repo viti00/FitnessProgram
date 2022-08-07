@@ -68,7 +68,7 @@
             return result;
         }
 
-        public PostDetailsModel GetPostById(string postId)
+        public PostDetailsModel GetPostDetails(string postId)
         {
             var post = context.Posts
                 .Where(x => x.Id == postId)
@@ -90,10 +90,8 @@
             return post;
         }
 
-        public PostFormModel CreateEditModel(string postId)
+        public PostFormModel CreateEditModel(Post post)
         {
-            var post = GetPostById(postId);
-
             var model = new PostFormModel
             {
                 Title = post.Title,
@@ -106,17 +104,22 @@
 
         public void Edit(PostFormModel model, string postId)
         {
-            var post = context.Posts.FirstOrDefault(x => x.Id == postId);
+            var post = GetPostById(postId);
 
             post.Title = model.Title;
             post.ImageUrl = model.ImageUrl;
             post.Text = model.Text;
 
-            context.Posts.Update(post);
             context.SaveChanges();
         }
 
-        public bool IsCreator(string postId, string userId)
-            => context.Posts.Any(x => x.Id == postId && x.CreatorId == userId);
+        public void Delete(Post post)
+        {
+            context.Posts.Remove(post);
+            context.SaveChanges();
+        }
+
+        public Post GetPostById(string postId)
+            => context.Posts.FirstOrDefault(x => x.Id == postId);
     }
 }

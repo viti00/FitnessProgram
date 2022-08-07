@@ -26,7 +26,7 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <div class="btn-create-container">
-            <a class="btn create-btn">Create Post</a>
+            <a asp-controller="Posts" asp-action="Create" class="btn create-btn">Create Post</a>
         </div>
     }
     <div class="row">
