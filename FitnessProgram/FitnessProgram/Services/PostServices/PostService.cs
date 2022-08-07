@@ -115,5 +115,8 @@
             context.Posts.Update(post);
             context.SaveChanges();
         }
+
+        public bool IsCreator(string postId, string userId)
+            => context.Posts.Any(x => x.Id == postId && x.CreatorId == userId);
     }
 }

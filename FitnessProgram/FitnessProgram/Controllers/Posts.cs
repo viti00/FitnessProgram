@@ -45,6 +45,13 @@
         [Authorize]
         public IActionResult Edit(string id)
         {
+            var userId = User.GetId();
+
+            if(postService.IsCreator(id, userId))
+            {
+                return RedirectToAction("All", "Posts");
+            }
+
             var model = postService.CreateEditModel(id);
 
             return View(model);

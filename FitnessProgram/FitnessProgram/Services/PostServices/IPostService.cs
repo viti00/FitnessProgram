@@ -13,5 +13,7 @@
         public PostFormModel CreateEditModel(string postId);
 
         public void Edit(PostFormModel model, string postId);
+
+        public bool IsCreator(string postId, string userId);
     }
 }
