@@ -31,23 +31,20 @@
 
         public class CustomerConstants
         {
-            public const int FirstNameMinLength = 2;
-            public const int FirstNameMaxLength = 20;
+            public const int FullNameMinLength = 5;
+            public const int FullNameMaxLength = 40;
 
-            public const int LastNameMinLength = 2;
-            public const int LastNameMaxLength = 20;
+            public const int PhoneNumberMinLength = 2;
+            public const int PhoneNumberMaxLength = 15;
+
+            public const int SexMinLength = 2;
+            public const int SexMaxLength = 20;
 
             public const int DesiredResultMinLength = 2;
             public const int DesiredResultMaxLength = 10000;
 
             public const int AgeMinValue = 14;
             public const int AgeMaxValue = 90;
-
-            public const string HeightMinValue = "90";
-            public const string HeightMaxValue = "250";
-
-            public const string WeightMinValue = "50";
-            public const string WeightMaxValue = "400";
         }
 
         public class BestResultConstants

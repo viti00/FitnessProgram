@@ -10,23 +10,18 @@
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(CustomerConstants.FirstNameMaxLength)]
-        public string FirstName { get; set; }
+        [MaxLength(CustomerConstants.FullNameMaxLength)]
+        public string FullName { get; set; }
 
-        [Required]
-        [MaxLength(CustomerConstants.LastNameMaxLength)]
-        public string LastName { get; set; }
+        [MaxLength(CustomerConstants.PhoneNumberMaxLength)]
+        public string? PhoneNumber { get;set; }
+
+        [MaxLength(CustomerConstants.SexMaxLength)]
+        public string? Sex { get; set; }
 
         [Range(CustomerConstants.AgeMinValue, CustomerConstants.AgeMaxValue)]
         public int Age { get; set; }
 
-        [Range(typeof(decimal), CustomerConstants.WeightMinValue, CustomerConstants.WeightMaxValue)]
-        [Column(TypeName = "decimal(15,2)")]
-        public decimal Weight { get; set; }
-
-        [Range(typeof(decimal), CustomerConstants.HeightMinValue, CustomerConstants.HeightMaxValue)]
-        [Column(TypeName = "decimal(15,2)")]
-        public decimal Height { get; set; }
 
         [Required]
         [MaxLength(CustomerConstants.DesiredResultMaxLength)]
