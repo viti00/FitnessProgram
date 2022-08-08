@@ -19,9 +19,10 @@
     opacity: 0.4;
 }
 
-.custom-container{
+.custom-container {
     border-radius: 15px;
-    background-color: grey;
+    background-color: dimgray;
+    box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #d3d3d3;
 }
 
 .dropbtn {
@@ -29,8 +30,8 @@
     font-size: 30px;
     text-align: center;
     border: none;
-    background-color: grey;
-    border-radius: 20px;
+    background-color: dimgray;
+    border-radius: 50%;
 }
 
 .dropdown {
@@ -65,3 +66,23 @@
     .dropdown:hover .dropdown-content {
         display: block;
     }
+
+.card-footer{
+    height: 250px;
+    background-color: grey;
+}
+
+.card-footer:last-child{
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.comments-section {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.container{
+    margin-left:0;
+}
