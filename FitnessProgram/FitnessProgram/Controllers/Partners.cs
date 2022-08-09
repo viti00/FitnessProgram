@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace FitnessProgram.Controllers
+﻿namespace FitnessProgram.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using static FitnessProgram.WebConstants;
     public class Partners : Controller
     {
         public IActionResult All()
@@ -9,11 +10,13 @@ namespace FitnessProgram.Controllers
             return View();
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Add()
         {
             return View();
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Edit()
         {
             return View();
