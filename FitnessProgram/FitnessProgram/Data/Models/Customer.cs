@@ -27,6 +27,9 @@
         [MaxLength(CustomerConstants.DesiredResultMaxLength)]
         public string DesiredResults { get; set; }
 
+        [ForeignKey(nameof(User))]
         public string UserId { get; set; }
+
+        public virtual User User { get; set; }
     }
 }

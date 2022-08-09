@@ -6,11 +6,11 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    public class Posts : Controller
+    public class PostsController : Controller
     {
         private readonly IPostService postService;
 
-        public Posts(IPostService postService)
+        public PostsController(IPostService postService)
         {
             this.postService = postService;
         }

@@ -3,7 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using static FitnessProgram.WebConstants;
-    public class Partners : Controller
+    public class PartnersController : Controller
     {
         public IActionResult All()
         {

@@ -25,7 +25,5 @@
         [Required]
         [MaxLength(PartnerConstants.PromoCodeMaxLegth)]
         public string PromoCode { get; set; }
-
-        public string CreatorId { get; set; }
     }
 }

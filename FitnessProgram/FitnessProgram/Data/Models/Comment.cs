@@ -16,7 +16,10 @@
         [Required]
         public DateTime CreatedOn { get; set; }
 
+        [ForeignKey(nameof(Creator))]
         public string CreatorId { get; set; }
+
+        public virtual User Creator { get; set; }
 
         [ForeignKey(nameof(Post))]
         public string PostId { get; set; }

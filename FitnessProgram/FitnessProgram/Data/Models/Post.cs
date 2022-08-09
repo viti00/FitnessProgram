@@ -1,6 +1,7 @@
 ﻿namespace FitnessProgram.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using static FitnessProgram.Data.DataConstants;
 
     public class Post
@@ -25,6 +26,9 @@
 
         public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
 
+        [ForeignKey(nameof(Creator))]
         public string CreatorId { get; set; }
+
+        public virtual User Creator { get; set; }
     }
 }

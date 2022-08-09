@@ -85,14 +85,12 @@
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                     LikesCount = x.Likes.Count(),
                     Comments = x.Comments.OrderByDescending(x => x.CreatedOn).ToList(),
-                    Creator = context.Users
-                              .Where(y=> y.Id == x.CreatorId)
-                              .Select(y => new UserViewModel
-                              {
-                                  Id = y.Id,
-                                  Username = y.UserName,
-                                  ProfilePicture = y.ProfilePicture
-                              }).FirstOrDefault()
+                    Creator = new UserViewModel
+                    {
+                        Id = x.CreatorId,
+                        ProfilePicture = x.Creator.ProfilePicture,
+                        Username = x.Creator.UserName
+                    }
                 }).FirstOrDefault();
 
             return post;

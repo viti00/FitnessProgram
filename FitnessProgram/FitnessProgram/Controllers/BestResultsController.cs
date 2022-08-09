@@ -4,7 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
     using static FitnessProgram.WebConstants;
 
-    public class BestResults : Controller
+    public class BestResultsController : Controller
     {
         public IActionResult All()
         {

@@ -3,7 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    public class Customers : Controller
+    public class CustomersController : Controller
     {
         [Authorize]
         public IActionResult Create()
