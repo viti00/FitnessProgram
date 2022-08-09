@@ -6,7 +6,7 @@ namespace FitnessProgram.Data
     using Microsoft.EntityFrameworkCore;
 
 
-    public class FitnessProgramDbContext : IdentityDbContext
+    public class FitnessProgramDbContext : IdentityDbContext<User>
     {
         public DbSet<Post> Posts { get; set; }
 

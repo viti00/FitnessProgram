@@ -52,5 +52,11 @@
             public const int StoryMinLegth = 10;
             public const int StoryMaxLegth = 10000;
         }
+
+        public class UserConstants
+        {
+            public const int PasswordMinLegth = 6;
+            public const int PasswordMaxLegth = 100;
+        }
     }
 }

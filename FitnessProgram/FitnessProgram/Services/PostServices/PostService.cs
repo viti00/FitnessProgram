@@ -38,6 +38,10 @@
 
             if (currPage > maxPage)
             {
+                if(maxPage == 0)
+                {
+                    maxPage = 1;
+                }
                 currPage = maxPage;
             }
 
@@ -81,10 +85,14 @@
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                     LikesCount = x.Likes.Count(),
                     Comments = x.Comments.OrderByDescending(x => x.CreatedOn).ToList(),
-                    Creator = new UserViewModel
-                    {
-                        Id = x.CreatorId
-                    }
+                    Creator = context.Users
+                              .Where(y=> y.Id == x.CreatorId)
+                              .Select(y => new UserViewModel
+                              {
+                                  Id = y.Id,
+                                  Username = y.UserName,
+                                  ProfilePicture = y.ProfilePicture
+                              }).FirstOrDefault()
                 }).FirstOrDefault();
 
             return post;
