@@ -109,19 +109,5 @@
 
             return RedirectToAction("All", "Posts");
         }
-
-        //public IActionResult LikePost(string id)
-        //{
-        //    postService.LikePost(id, User.GetId());
-
-        //    return Ok();
-        //}
-
-        //public IActionResult UnlikePost(string id)
-        //{
-        //    postService.UnlikePost(id, User.GetId());
-
-        //    return Ok();
-        //}
     }
 }

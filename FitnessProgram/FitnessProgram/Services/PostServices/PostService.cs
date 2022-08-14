@@ -5,16 +5,19 @@
     using FitnessProgram.Models.Comment;
     using FitnessProgram.Models.Post;
     using FitnessProgram.Services.CommentService;
+    using FitnessProgram.Services.LikeService;
 
     public class PostService : IPostService
     {
         private readonly FitnessProgramDbContext context;
         private readonly ICommentService commentService;
+        private readonly ILikeService likeService;
 
-        public PostService(FitnessProgramDbContext context, ICommentService commentService)
+        public PostService(FitnessProgramDbContext context, ICommentService commentService, ILikeService likeService)
         {
             this.context = context;
             this.commentService = commentService;
+            this.likeService = likeService;
         }
         public void Create(PostFormModel model, string creatorId)
         {
@@ -141,6 +144,10 @@
             var comments = commentService.GetAll(post.Id);
 
             context.Comments.RemoveRange(comments);
+
+            var likes = likeService.GetAllLikesForPost(post.Id);
+
+            context.userLikedPosts.RemoveRange(likes);
 
             context.Posts.Remove(post);
             context.SaveChanges();

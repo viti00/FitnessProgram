@@ -1,0 +1,23 @@
+﻿@model CommentViewModel
+
+
+<div class="d-flex flex-start mb-4">
+    <img class="rounded-circle shadow-1-strong me-3"
+         src="@Model.UserProfilePictire" alt="avatar" width="65"
+         height="65" />
+    <div class="card w-100">
+        <div class="card-body p-4">
+            <div>
+                <p class="small">User: @Model.UserUsername</p>
+                <p class="small">Posted on: @Model.CreatedOn</p>
+                <p comment-message-id="@Model.Id">
+                    @Model.Message
+                </p>
+            </div>
+            <div class="comment-btns-section">
+                <button onclick="OnEdit(@Model.Id)" class="btn edit">Edit</button>
+                <button onclick="Delete(@Model.Id)" data-id="@Model.Id" class="btn delete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

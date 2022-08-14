@@ -44,7 +44,7 @@
                                     <button class="dropbtn">...</button>
                                     <div class="dropdown-content">
                                         <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                                        <a asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                                        <a onclick="DeletePost()">Delete</a>
                                     </div>
                                 </div>
                             }
@@ -102,6 +102,9 @@
 </div>
 
 @section Scripts{
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script>
         function Like() {
             if ($('#like-btn').text() == "Like") {
@@ -125,6 +128,31 @@
     </script>
 
     <script>
+
+        function DeletePost() {
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this post!",
+                icon: "warning",
+                buttons: ["Cancel", "Yes, delete it!"],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        
+                        swal("The post was deleted!", {
+                            icon: "success",
+                        });
+
+                        $.get(`/posts/delete/@Model.Id`, (redirect) => {
+                            window.location.replace("https://localhost:7238/Posts/All");
+                        });
+                    } else {
+                        swal("The post was not delete");
+                    }
+                });
+        }
+
         function Action() {
             if ($('.comment-edit-btns').text() == "Edit") {
                 Edit();
@@ -228,21 +256,33 @@
 
         function Delete(id) {
 
-            var text = "Are you sure you want to delete this comment?";
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this comment!",
+                icon: "warning",
+                buttons: ["Cancel", "Yes, delete it!"],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.get(`/comments/delete/${id}`, (status) => {
 
-            if (confirm(text)) {
-                $.get(`/comments/delete/${id}`, (status) => {
+                            var par = $(`[data-id="${id}"]`).parent().parent().parent().parent();
 
-                    var par = $(`[data-id="${id}"]`).parent().parent().parent().parent();
+                            par.remove();
 
-                    par.remove();
+                            $.get('/comments/commentscount/@Model.Id', (count) => {
+                                $('#comments-count').text(count);
+                            });
 
-                    $.get('/comments/commentscount/@Model.Id', (count) => {
-                        $('#comments-count').text(count);
-                    });
-
+                        });
+                        swal("The comment was deleted!", {
+                            icon: "success",
+                        });
+                    } else {
+                        swal("The comment was not delete");
+                    }
                 });
-            }
         }
 
         function CreateComment(comment) {
