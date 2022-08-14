@@ -38,7 +38,7 @@ namespace FitnessProgram.Data
 
             builder.Entity<Comment>()
                 .HasOne(x => x.Post)
-                .WithMany(x=> x.Comments)
+                .WithMany(x => x.Comments)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);

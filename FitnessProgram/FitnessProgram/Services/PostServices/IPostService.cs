@@ -9,7 +9,7 @@
 
         public void Create(PostFormModel model, string userId);
 
-        public PostDetailsModel GetPostDetails(string postId);
+        public PostDetailsModel GetPostDetails(string postId, string userId);
 
         public PostFormModel CreateEditModel(Post post);
 

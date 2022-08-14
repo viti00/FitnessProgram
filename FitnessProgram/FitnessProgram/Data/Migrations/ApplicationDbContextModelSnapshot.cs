@@ -420,7 +420,7 @@ namespace FitnessProgram.Data.Migrations
                     b.HasOne("FitnessProgram.Data.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Creator");

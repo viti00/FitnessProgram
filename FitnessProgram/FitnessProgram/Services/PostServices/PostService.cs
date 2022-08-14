@@ -2,16 +2,20 @@
 {
     using FitnessProgram.Data;
     using FitnessProgram.Data.Models;
+    using FitnessProgram.Models.Comment;
     using FitnessProgram.Models.Post;
-
+    using FitnessProgram.Services.CommentService;
 
     public class PostService : IPostService
     {
         private readonly FitnessProgramDbContext context;
+        private readonly ICommentService commentService;
 
-        public PostService(FitnessProgramDbContext context)
-            => this.context = context;
-
+        public PostService(FitnessProgramDbContext context, ICommentService commentService)
+        {
+            this.context = context;
+            this.commentService = commentService;
+        }
         public void Create(PostFormModel model, string creatorId)
         {
 
@@ -72,8 +76,10 @@
             return result;
         }
 
-        public PostDetailsModel GetPostDetails(string postId)
+        public PostDetailsModel GetPostDetails(string postId, string userId)
         {
+            var alreadyLiked = context.userLikedPosts.Any(x => x.PostId == postId && x.UserId == userId);
+
             var post = context.Posts
                 .Where(x => x.Id == postId)
                 .Select(x => new PostDetailsModel
@@ -84,12 +90,23 @@
                     Text = x.Text,
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                     LikesCount = x.Likes.Count(),
-                    Comments = x.Comments.OrderByDescending(x => x.CreatedOn).ToList(),
+                    IsCurrUserLikedPost = alreadyLiked,
+                    Comments = x.Comments
+                                .OrderByDescending(x => x.CreatedOn)
+                                .Select(x=> new CommentViewModel
+                                {
+                                    Id = x.Id,
+                                    Message = x.Message,
+                                    CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
+                                    UserProfilePictire = x.Creator.ProfilePicture,
+                                    UserUsername = x.Creator.UserName
+                                })
+                                .ToList(),
                     Creator = new UserViewModel
                     {
                         Id = x.CreatorId,
                         ProfilePicture = x.Creator.ProfilePicture,
-                        Username = x.Creator.UserName
+                        Username = x.Creator.UserName,
                     }
                 }).FirstOrDefault();
 
@@ -121,6 +138,10 @@
 
         public void Delete(Post post)
         {
+            var comments = commentService.GetAll(post.Id);
+
+            context.Comments.RemoveRange(comments);
+
             context.Posts.Remove(post);
             context.SaveChanges();
         }

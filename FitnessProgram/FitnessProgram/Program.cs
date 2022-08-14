@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FitnessProgram.Services.PostServices;
 using FitnessProgram.Data.Models;
+using Microsoft.AspNetCore.Mvc;
+using FitnessProgram.Services.LikeService;
+using FitnessProgram.Services.CommentService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,9 +26,16 @@ builder.Services.AddDefaultIdentity<User>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<FitnessProgramDbContext>();
-builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllersWithViews(options=>
+{
+    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+});
+
 
 builder.Services.AddTransient<IPostService, PostService>();
+builder.Services.AddTransient<ILikeService, LikeService>();
+builder.Services.AddTransient<ICommentService, CommentService>();
 
 var app = builder.Build();
 
@@ -54,6 +64,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();

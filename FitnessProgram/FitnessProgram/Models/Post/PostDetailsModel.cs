@@ -2,6 +2,7 @@
 namespace FitnessProgram.Models.Post
 {
     using FitnessProgram.Data.Models;
+    using FitnessProgram.Models.Comment;
 
     public class PostDetailsModel
     {
@@ -17,7 +18,9 @@ namespace FitnessProgram.Models.Post
 
         public int LikesCount { get; set; }
 
-        public ICollection<Comment> Comments { get; init; }
+        public bool IsCurrUserLikedPost { get; init; }
+
+        public ICollection<CommentViewModel> Comments { get; init; }
 
         public UserViewModel Creator { get; init; }
     }
@@ -29,6 +32,6 @@ namespace FitnessProgram.Models.Post
 
         public string? ProfilePicture { get; init; }
 
-        public string? Username { get; init; }
+        public string Username { get; init; }
     }
 }

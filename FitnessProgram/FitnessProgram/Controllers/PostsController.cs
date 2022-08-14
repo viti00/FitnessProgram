@@ -79,7 +79,7 @@
 
         public IActionResult Details(string id)
         {
-            var post = postService.GetPostDetails(id);
+            var post = postService.GetPostDetails(id, User.GetId());
 
             if(post == null)
             {
@@ -109,5 +109,19 @@
 
             return RedirectToAction("All", "Posts");
         }
+
+        //public IActionResult LikePost(string id)
+        //{
+        //    postService.LikePost(id, User.GetId());
+
+        //    return Ok();
+        //}
+
+        //public IActionResult UnlikePost(string id)
+        //{
+        //    postService.UnlikePost(id, User.GetId());
+
+        //    return Ok();
+        //}
     }
 }
