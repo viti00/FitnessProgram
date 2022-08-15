@@ -8,16 +8,20 @@
 
 @{
     ViewBag.Title = "Post Details";
-    ViewBag.IsCreator = true;
+    ViewBag.IsCreator = false;
 }
 
-@if (!SignInManager.IsSignedIn(User) || Model.Creator.Id != User.GetId())
+@if (SignInManager.IsSignedIn(User))
 {
-    ViewBag.IsCreator = false;
+    if (User.IsInRole(WebConstants.AdministratorRoleName) || Model.Creator.Id == User.GetId())
+    {
+        ViewBag.IsCreator = true;
+    }
 }
 
 @section Styles{
     <link rel="stylesheet" href="~/css/PostDetail.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 }
 
 
@@ -27,7 +31,7 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
                     <div class="card custom-container">
-                        <div class="card-body">
+                        <div id="post" data-id="@Model.Id" class="card-body">
                             <div class="d-flex flex-start align-items-center">
                                 <img class="rounded-circle shadow-1-strong me-3"
                                  src="@Model.Creator.ProfilePicture" alt="avatar" width="60"
@@ -41,10 +45,10 @@
                                 @if (ViewBag.IsCreator == true)
                             {
                                 <div class="dropdown">
-                                    <button class="dropbtn">...</button>
+                                    <button class="dropbtn fa fa-cog fa-spin" style="font-size:24px"></button>
                                     <div class="dropdown-content">
                                         <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                                        <a onclick="DeletePost()">Delete</a>
+                                        <a id="delete-post" data-id="@Model.Id" onclick="DeletePost()">Delete</a>
                                     </div>
                                 </div>
                             }
@@ -61,8 +65,8 @@
 
                         <div class="small d-flex justify-content-start">
                             <div class="d-flex align-items-center me-3 text-decoration-none">
-                                <i id="likes-count" class="far fa-thumbs-up me-2 text-light">@Model.LikesCount</i>
-                                <button id="like-btn" onclick="Like()" class="mb-0 text-light">@(Model.IsCurrUserLikedPost == true?"Liked":"Like")</button>
+                                <i id="likes-count" class="text-light">@Model.LikesCount</i>
+                                <button id="like-btn" onclick="OnLike()" class="mb-0 text-light">@(Model.IsCurrUserLikedPost == true?"Liked":"Like")</button>
                             </div>
                             <div class="d-flex align-items-center me-3 text-decoration-none">
                                 <i id="comments-count" class="far fa-comment-dots me-2 text-light">@Model.Comments.Count()</i>
@@ -105,251 +109,15 @@
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-    <script>
-        function Like() {
-            if ($('#like-btn').text() == "Like") {
+    <script src="/js/PostIdConstant.js"></script>
 
-                $.get('/likes/likepost/@Model.Id', (status) => {
-                    $.get('/api/likes/@Model.Id', (likes) => {
-                        $('#likes-count').text(likes);
-                        $('#like-btn').text('Liked');
-                    })
-                });
-            }
-            else {
-                $.get('/likes/unlikepost/@Model.Id', (status) => {
-                    $.get('/api/likes/@Model.Id', (likes) => {
-                        $('#likes-count').text(likes);
-                        $('#like-btn').text('Like');
-                    })
-                });
-            }
-        }
-    </script>
+    <script src="/js/LikeUnlikePost.js"></script>
 
-    <script>
+    <script src="/js/PrepareAndCancelEdit.js"></script>
 
-        function DeletePost() {
-            swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this post!",
-                icon: "warning",
-                buttons: ["Cancel", "Yes, delete it!"],
-                dangerMode: true,
-            })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        
-                        swal("The post was deleted!", {
-                            icon: "success",
-                        });
+    <script src="/js/CreateAndEditComment.js"></script>
 
-                        $.get(`/posts/delete/@Model.Id`, (redirect) => {
-                            window.location.replace("https://localhost:7238/Posts/All");
-                        });
-                    } else {
-                        swal("The post was not delete");
-                    }
-                });
-        }
+    <script src="/js/DeleteComment.js"></script>
 
-        function Action() {
-            if ($('.comment-edit-btns').text() == "Edit") {
-                Edit();
-            }
-            else {
-                Comment();
-            }
-
-        }
-
-        function Comment() {
-            var message = $('textarea').val();
-            if (message.trim().length >= 2) {
-                $('span').attr("hidden", true);
-                $.get(`/comments/comment/@Model.Id?message=${message}`, (status) => {
-                    $('textarea').val('');
-                    $.get('/api/comments/@Model.Id', (comment) => {
-                        $.get('/comments/commentscount/@Model.Id', (count) => {
-                            if (count == 1) {
-
-                                $('#no-comments').remove();
-
-                                var divCommentSection = document.createElement('div');
-                                divCommentSection.classList.add("comments-section");
-
-                                $('.card-footer').prepend(divCommentSection);
-
-                            }
-
-                            var divParent = CreateComment(comment);
-
-                            $('.comments-section').prepend(divParent);
-                            $('#comments-count').text(count);
-                        })
-
-                    });
-                });
-            }
-            else {
-                $('span').removeAttr("hidden");
-            }
-        }
-
-        function OnEdit(id) {
-
-            var editBtns = document.querySelectorAll("button.edit, button.delete")
-                .forEach(x => {
-                    x.setAttribute("disabled", "disabled");
-                });
-
-            $('.comment-edit-btns').attr("comment-id", id);
-            $('.comment-edit-btns').text("Edit");
-
-            var divInputGr = document.createElement('div');
-            divInputGr.id = "cancel";
-            divInputGr.classList.add("input-group-append");
-
-            var btnCancel = document.createElement("button");
-            btnCancel.addEventListener("click", Cancel);
-            btnCancel.classList.add("btn", "btn-outline-secondary", "cancel-btn");
-            btnCancel.textContent = "X";
-
-            divInputGr.appendChild(btnCancel)
-
-            $("#comment").append(divInputGr);
-
-            $.get(`/comments/getmessage/${id}`, (message) => {
-                $("#message").val(message);
-            })
-        }
-
-        function Edit() {
-            var commentId = document.getElementsByClassName("comment-edit-btns")[0].getAttribute("comment-id");
-
-            var message = $("#message").val();
-
-            if (message.trim().length >= 2) {
-                $.get(`/comments/edit/${commentId}?message=${message}`, (status) => {
-                    document.querySelector(`[comment-message-id="${commentId}"]`).textContent = message;
-                    $('span').attr("hidden", true);
-                    Cancel();
-                })
-            }
-            else {
-                $('span').removeAttr("hidden");
-            }
-
-
-        }
-
-        function Cancel() {
-            $('#cancel').remove();
-            $('.comment-edit-btns').removeAttr("comment-id");
-            $('.comment-edit-btns').text("Comment");
-            $("#message").val('');
-            var editBtns = document.querySelectorAll("button.edit, button.delete").
-                forEach(btn => {
-                    btn.removeAttribute("disabled");
-                });
-        }
-
-        function Delete(id) {
-
-            swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this comment!",
-                icon: "warning",
-                buttons: ["Cancel", "Yes, delete it!"],
-                dangerMode: true,
-            })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $.get(`/comments/delete/${id}`, (status) => {
-
-                            var par = $(`[data-id="${id}"]`).parent().parent().parent().parent();
-
-                            par.remove();
-
-                            $.get('/comments/commentscount/@Model.Id', (count) => {
-                                $('#comments-count').text(count);
-                            });
-
-                        });
-                        swal("The comment was deleted!", {
-                            icon: "success",
-                        });
-                    } else {
-                        swal("The comment was not delete");
-                    }
-                });
-        }
-
-        function CreateComment(comment) {
-            var divParent = document.createElement("div");
-            divParent.classList.add("d-flex", "flex-start", "mb-4");
-
-            var img = document.createElement("img");
-
-            img.classList.add("rounded-circle", "shadow-1-strong", "me-3")
-            img.setAttribute("src", Object.values(comment)[3]);
-            img.setAttribute("alt", "avatar");
-            img.setAttribute("width", "65");
-            img.setAttribute("height", "65");
-
-
-            var divClassW100 = document.createElement('div');
-            divClassW100.classList.add("card", "w-100")
-
-            var divClassCardBoyd = document.createElement("div");
-            divClassCardBoyd.classList.add("card-body", "p-4");
-
-            var div = document.createElement('div');
-
-            var pUsername = document.createElement("p");
-            pUsername.classList.add("small");
-            pUsername.textContent = "User: " + Object.values(comment)[4];
-
-            var pClassSmall = document.createElement('p');
-            pClassSmall.classList.add("small");
-            pClassSmall.textContent = "Posted on: " + Object.values(comment)[2];
-
-            var id = Object.values(comment)[0];
-
-            var pMessage = document.createElement("p");
-            pMessage.setAttribute("comment-message-id", id);
-            pMessage.textContent = Object.values(comment)[1];
-
-            var divBtnsSection = document.createElement("div");
-            divBtnsSection.classList.add("comment-btns-section");
-
-            var editBtn = document.createElement("button");
-            editBtn.classList.add("btn", "edit");
-            editBtn.textContent = "Edit";
-            editBtn.setAttribute("onclick", `OnEdit(${id})`);
-
-            var deleteBtn = document.createElement("button");
-            deleteBtn.classList.add("btn", "delete");
-            deleteBtn.setAttribute("data-id", Object.values(comment)[0]);
-            deleteBtn.textContent = "Delete";
-            deleteBtn.setAttribute("onclick", `Delete(${id})`);
-
-            div.appendChild(pUsername);
-            div.appendChild(pClassSmall);
-            div.appendChild(pMessage);
-
-            divBtnsSection.appendChild(editBtn);
-            divBtnsSection.appendChild(deleteBtn);
-
-            divClassCardBoyd.appendChild(div);
-            divClassCardBoyd.appendChild(divBtnsSection);
-
-            divClassW100.appendChild(divClassCardBoyd);
-
-            divParent.appendChild(img);
-            divParent.appendChild(divClassW100);
-
-            return divParent;
-        }
-    </script>
+    <script src="/js/DeletePost.js"></script>
 }

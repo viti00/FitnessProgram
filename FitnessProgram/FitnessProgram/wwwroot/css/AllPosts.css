@@ -3,6 +3,10 @@
     -ms-overflow-style: none;
 }
 
+.div-position{
+    margin-left: 35%;
+}
+
 .card {
     border-radius: 8px;
     border: 1px solid #cccccc;

@@ -1,0 +1,1 @@
+﻿let id = document.getElementById("post").getAttribute("data-id");

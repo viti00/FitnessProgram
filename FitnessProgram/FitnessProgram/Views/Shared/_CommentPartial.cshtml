@@ -7,17 +7,18 @@
          height="65" />
     <div class="card w-100">
         <div class="card-body p-4">
+            <div class="float-end">
+                <button onclick="OnEdit(@Model.Id)" class="fa fa-pencil btns" style="font-size:24px"></button>
+                <button onclick="Delete(@Model.Id)" data-id="@Model.Id" style="font-size:24px;color:red" class="fa fa-close btns"></button>
+            </div>
             <div>
-                <p class="small">User: @Model.UserUsername</p>
+                <h5>@Model.UserUsername</h5>
                 <p class="small">Posted on: @Model.CreatedOn</p>
                 <p comment-message-id="@Model.Id">
                     @Model.Message
                 </p>
             </div>
-            <div class="comment-btns-section">
-                <button onclick="OnEdit(@Model.Id)" class="btn edit">Edit</button>
-                <button onclick="Delete(@Model.Id)" data-id="@Model.Id" class="btn delete">Delete</button>
-            </div>
         </div>
     </div>
 </div>
+
