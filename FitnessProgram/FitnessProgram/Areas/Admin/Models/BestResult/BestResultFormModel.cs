@@ -1,4 +1,4 @@
-﻿namespace FitnessProgram.Models.BestResult
+﻿namespace FitnessProgram.Areas.Admin.Models.BestResult
 {
     using System.ComponentModel.DataAnnotations;
     using static FitnessProgram.Data.DataConstants;

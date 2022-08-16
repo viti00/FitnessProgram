@@ -12,7 +12,7 @@
 <div class="section">
     <div class="color-overlay"></div>
     <div class="wrapper col-sm-12 col-md-10 offset-md-1 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
-        <form method="post">
+        <form method="post" asp-area="Admin">
             <div class="logo">
                 <img src="~/lib/Images/logo.png" alt="">
             </div>
@@ -30,9 +30,9 @@
                 <span asp-validation-for="Description" class="small text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for=ImageUrl>Image URL<span class="text-danger">*</span></label>
-                <input asp-for="ImageUrl" class="form-control" placeholder="https://image...">
-                <span asp-validation-for="ImageUrl" class="small text-danger"></span>
+                <label asp-for=Image>Image URL<span class="text-danger">*</span></label>
+                <input asp-for="Image" class="form-control" placeholder="https://image...">
+                <span asp-validation-for="Image" class="small text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for=Url>Site URL<span class="text-danger">*</span></label>

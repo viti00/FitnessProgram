@@ -17,10 +17,12 @@ namespace FitnessProgram.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<User> signInManager;
+        private readonly UserManager<User> userManager;
 
-        public LoginModel(SignInManager<User> signInManager)
+        public LoginModel(SignInManager<User> signInManager, UserManager<User> userManager)
         {
             this.signInManager = signInManager;
+            this.userManager = userManager;
         }
 
         [BindProperty]
@@ -63,12 +65,19 @@ namespace FitnessProgram.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
+            
 
             if (ModelState.IsValid)
             {
+                var user = await userManager.FindByNameAsync(Input.UserName);
+
                 var result = await signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    if (await userManager.IsInRoleAsync(user, WebConstants.AdministratorRoleName))
+                    {
+                        returnUrl = Url.Content("~/Admin");
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.IsLockedOut)

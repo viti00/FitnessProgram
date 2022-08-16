@@ -2,23 +2,10 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using static FitnessProgram.WebConstants;
 
     public class BestResultsController : Controller
     {
         public IActionResult All()
-        {
-            return View();
-        }
-
-        [Authorize(Roles = AdministratorRoleName)]
-        public IActionResult Add()
-        {
-            return View();
-        }
-
-        [Authorize(Roles = AdministratorRoleName)]
-        public IActionResult Edit()
         {
             return View();
         }

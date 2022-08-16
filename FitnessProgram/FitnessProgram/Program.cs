@@ -7,6 +7,8 @@ using FitnessProgram.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using FitnessProgram.Services.LikeService;
 using FitnessProgram.Services.CommentService;
+using FitnessProgram.Services.BestResultService;
+using FitnessProgram.Services.PartnerService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,10 +38,11 @@ builder.Services.AddControllersWithViews(options=>
 builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<ILikeService, LikeService>();
 builder.Services.AddTransient<ICommentService, CommentService>();
+builder.Services.AddTransient<IBestResultService, BestResultService>();
+builder.Services.AddTransient<IPartnerService, PartnerService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -47,7 +50,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -61,9 +63,15 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoint =>
+{
+    endpoint.MapControllerRoute(
+        name: "Areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+        );
+
+    endpoint.MapDefaultControllerRoute();
+});
 
 app.MapRazorPages();
 

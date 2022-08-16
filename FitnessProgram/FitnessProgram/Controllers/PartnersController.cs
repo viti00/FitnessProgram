@@ -9,17 +9,5 @@
         {
             return View();
         }
-
-        [Authorize(Roles = AdministratorRoleName)]
-        public IActionResult Add()
-        {
-            return View();
-        }
-
-        [Authorize(Roles = AdministratorRoleName)]
-        public IActionResult Edit()
-        {
-            return View();
-        }
     }
 }
