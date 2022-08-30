@@ -1,5 +1,4 @@
 ﻿function Delete(commentId) {
-
     swal({
         title: "Are you sure?",
         text: "Once deleted, you will not be able to recover this comment!",
@@ -10,13 +9,8 @@
         .then((willDelete) => {
             if (willDelete) {
                 $.get(`/comments/delete/${commentId}`, (status) => {
-
-                    var par = $(`[data-id="${commentId}"]`).parent().parent().parent().parent();
-
-                    par.remove();
-
                     $.get(`/comments/commentscount/${id}`, (count) => {
-                        $('#comments-count').text(count);
+                        commentsConnection.invoke("DeleteComment", commentId, count);
                     });
 
                 });
@@ -27,4 +21,23 @@
                 swal("The comment will not be deleted!");
             }
         });
+}
+
+
+function CreateNoElementsSection() {
+    let divNoComments = document.createElement("div");
+    divNoComments.setAttribute("id", "no-comments");
+
+    let pFirstElement = document.createElement("p");
+    pFirstElement.classList.add("text-center", "text-light");
+    pFirstElement.textContent = "There is no comments for this post";
+
+    let pSecondElement = document.createElement("p");
+    pSecondElement.classList.add("text-center", "text-light");
+    pSecondElement.textContent = "Be the first who comment";
+
+    divNoComments.appendChild(pFirstElement);
+    divNoComments.appendChild(pSecondElement);
+
+    return divNoComments;
 }

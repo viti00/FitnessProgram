@@ -1,7 +1,5 @@
 ﻿function OnLike() {
-
     if ($('#like-btn').text() == "Like") {
-
         Like();
     }
     else {
@@ -12,8 +10,9 @@
 function Like() {
     $.get(`/likes/likepost/${id}`, (status) => {
         $.get(`/api/likes/${id}`, (likes) => {
-            $('#likes-count').text(likes);
             $('#like-btn').text('Liked');
+
+            likesConnection.invoke("CountChanger", likes);
         })
     });
 }
@@ -21,8 +20,8 @@ function Like() {
 function UnLike() {
     $.get(`/likes/unlikepost/${id}`, (status) => {
         $.get(`/api/likes/${id}`, (likes) => {
-            $('#likes-count').text(likes);
             $('#like-btn').text('Like');
+            connection.invoke("CountChanger", likes);
         })
     });
 }

@@ -9,10 +9,10 @@ using FitnessProgram.Services.LikeService;
 using FitnessProgram.Services.CommentService;
 using FitnessProgram.Services.BestResultService;
 using FitnessProgram.Services.PartnerService;
+using FitnessProgram.Controllers.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<FitnessProgramDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -40,6 +40,7 @@ builder.Services.AddTransient<ILikeService, LikeService>();
 builder.Services.AddTransient<ICommentService, CommentService>();
 builder.Services.AddTransient<IBestResultService, BestResultService>();
 builder.Services.AddTransient<IPartnerService, PartnerService>();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -62,6 +63,9 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<LikesHub>("/likesHub");
+app.MapHub<CommentsHub>("/commentsHub");
 
 app.UseEndpoints(endpoint =>
 {

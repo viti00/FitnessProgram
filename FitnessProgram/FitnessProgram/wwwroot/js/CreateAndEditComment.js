@@ -1,5 +1,4 @@
-﻿
-function Action() {
+﻿function Action() {
     if ($('.comment-edit-btns').text() == "Edit") {
         Edit();
     }
@@ -17,21 +16,10 @@ function Comment() {
             $('textarea').val('');
             $.get(`/api/comments/${id}`, (comment) => {
                 $.get(`/comments/commentscount/${id}`, (count) => {
-                    if (count == 1) {
 
-                        $('#no-comments').remove();
-
-                        var divCommentSection = document.createElement('div');
-                        divCommentSection.classList.add("comments-section");
-
-                        $('.card-footer').prepend(divCommentSection);
-
-                    }
-
+                    debugger;
                     var divParent = CreateComment(comment);
-
-                    $('.comments-section').prepend(divParent);
-                    $('#comments-count').text(count);
+                    commentsConnection.invoke("CreateComment", divParent, count)
                 })
 
             });
@@ -49,9 +37,7 @@ function Edit() {
 
     if (message.trim().length >= 2) {
         $.get(`/comments/edit/${commentId}?message=${message}`, (status) => {
-            document.querySelector(`[comment-message-id="${commentId}"]`).textContent = message;
-            $('span').attr("hidden", true);
-            Cancel();
+            commentsConnection.invoke("EditComment", message, commentId);
         })
     }
     else {
@@ -108,13 +94,13 @@ function CreateComment(comment) {
     btnDelete.setAttribute("data-id", id);
     btnDelete.setAttribute("onclick", `Delete(${id})`);
 
-    div.appendChild(pUsername);
+    div.appendChild(h5Username);
     div.appendChild(pClassSmall);
     div.appendChild(pMessage);
 
 
-    divFloat.appendChild(iEdit);
-    divFloat.appendChild(iDelete);
+    divFloat.appendChild(btnEdit);
+    divFloat.appendChild(btnDelete);
 
     divClassCardBoyd.appendChild(divFloat);
     divClassCardBoyd.appendChild(div);
@@ -124,5 +110,12 @@ function CreateComment(comment) {
     divParent.appendChild(img);
     divParent.appendChild(divClassW100);
 
-    return divParent;
+    return divParent.outerHTML;
+}
+
+function CreateDivCommentSection() {
+    var divCommentSection = document.createElement('div');
+    divCommentSection.classList.add("comments-section");
+
+    return divCommentSection;
 }

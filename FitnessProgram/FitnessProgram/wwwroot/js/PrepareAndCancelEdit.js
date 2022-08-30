@@ -1,7 +1,6 @@
 ﻿function OnEdit(commentId) {
 
     var editAndDeleteBtns = document.querySelectorAll("button.btns");
-    console.log(editAndDeleteBtns);
     editAndDeleteBtns.forEach(x => {
             x.setAttribute("disabled", "disabled");
         });
