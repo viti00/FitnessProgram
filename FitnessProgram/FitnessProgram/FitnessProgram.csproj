@@ -18,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\BestResult\" />
     <Folder Include="wwwroot\lib\Images\" />
     <Folder Include="wwwroot\lib\videos\" />
   </ItemGroup>

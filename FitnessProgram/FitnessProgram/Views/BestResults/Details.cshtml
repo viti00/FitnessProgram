@@ -1,0 +1,63 @@
+﻿@model BestResultDetailsModel
+
+@{
+    ViewBag.Title = "BestResult Details";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/PostDetail.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+}
+
+
+    <div class="section">
+        <div class="color-overlay"></div>
+        <div class="container my-5 py-5">
+            <div class="row d-flex justify-content-center">
+                <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
+                    <div class="card custom-container">
+                        <div id="post" data-id="@Model.Id" class="card-body">
+                            <div class="d-flex flex-start align-items-center">
+                                <div>
+                                    <p class="small mb-0 text-light">
+                                        Posted on - @Model.CreatedOn
+                                    </p>
+                                </div>
+                                @if (User.IsInRole(WebConstants.AdministratorRoleName))
+                                {
+                                <div class="dropdown">
+                                    <button class="dropbtn fa fa-cog fa-spin" style="font-size:24px"></button>
+                                    <div class="dropdown-content">
+                                        <a asp-area="Admin" asp-controller="BestResults" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                                        <a id="delete-bestresult" data-id="@Model.Id" onclick="DeleteBestResult()">Delete</a>
+                                    </div>
+                                </div>
+                                }
+                        </div>
+
+                        <p class="mt-3 mb-4 pb-2 text-center">
+                            <img src="@Model.ImageUrlBefore" alt="avatar" width="300" height="250" style="border-radius: 15px; margin-right: 30px" />
+                            <img src="@Model.ImageUrlAfter" alt="avatar" width="300" height="250" style="border-radius: 15px; margin-left: 30px " />
+                        </p>
+                        <p class="mt-3 mb-4 pb-2 text-light">
+                            @Model.Story
+                        </p>
+
+                        <div class="small d-flex justify-content-start">
+                            <div class="d-flex align-items-center me-3 text-decoration-none">
+                                <i id="likes-count" class="text-light">0</i>
+                                <button id="like-btn" onclick="OnLike()" class="mb-0 text-light">@*@(Model.IsCurrUserLikedPost == true?"Liked":"Like")*@ Like</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="/js/DeleteBestResult.js"></script>
+}

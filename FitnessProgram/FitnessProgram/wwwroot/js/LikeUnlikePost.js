@@ -21,7 +21,7 @@ function UnLike() {
     $.get(`/likes/unlikepost/${id}`, (status) => {
         $.get(`/api/likes/${id}`, (likes) => {
             $('#like-btn').text('Like');
-            connection.invoke("CountChanger", likes);
+            likesConnection.invoke("CountChanger", likes);
         })
     });
 }

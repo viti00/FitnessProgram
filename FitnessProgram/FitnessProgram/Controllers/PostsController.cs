@@ -53,7 +53,7 @@
                 return BadRequest();
             }
 
-            if(post.CreatorId != userId)
+            if(!User.IsInRole(WebConstants.AdministratorRoleName) && post.CreatorId != userId)
             {
                 return Unauthorized();
             }
@@ -100,7 +100,7 @@
                 BadRequest();
             }
 
-            if(post.CreatorId != userId)
+            if(!User.IsInRole(WebConstants.AdministratorRoleName) && post.CreatorId != userId)
             {
                 return Unauthorized();
             }

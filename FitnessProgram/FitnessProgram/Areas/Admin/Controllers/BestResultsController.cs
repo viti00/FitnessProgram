@@ -53,7 +53,27 @@
 
             bestResultService.EditBestResult(id, model);
 
-            return RedirectToAction("Index", "Home");
+            return Redirect($"https://localhost:7238/bestresults/details/{id}");
+        }
+
+        [Authorize(Roles =AdministratorRoleName)]
+        public IActionResult Delete(int id)
+        {
+            var bestResult = bestResultService.GetBestResultById(id);
+
+            if (!User.IsInRole(AdministratorRoleName))
+            {
+                return Unauthorized();
+            }
+
+            if(bestResult == null)
+            {
+                return BadRequest();
+            }
+
+            bestResultService.DeleteBestResult(bestResult);
+
+            return Redirect("https://localhost:7238/BestResults/all");
         }
 
     }

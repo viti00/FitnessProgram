@@ -14,6 +14,9 @@
         public string ImageUrlAfter { get; set; }
 
         [Required]
+        public DateTime CreatedOn { get; set; }
+
+        [Required]
         [MaxLength(BestResultConstants.StoryMaxLegth)]
         public string Story { get; set; }
     }
