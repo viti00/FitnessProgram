@@ -29,7 +29,7 @@
                                     <button class="dropbtn fa fa-cog fa-spin" style="font-size:24px"></button>
                                     <div class="dropdown-content">
                                         <a asp-area="Admin" asp-controller="BestResults" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                                        <a id="delete-bestresult" data-id="@Model.Id" onclick="DeleteBestResult()">Delete</a>
+                                        <a onclick="DeleteBestResult(@Model.Id)">Delete</a>
                                     </div>
                                 </div>
                                 }

@@ -1,13 +1,23 @@
 ﻿namespace FitnessProgram.Controllers
 {
+    using FitnessProgram.Models.Partners;
+    using FitnessProgram.Services.PartnerService;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using static FitnessProgram.WebConstants;
     public class PartnersController : Controller
     {
-        public IActionResult All()
+        private readonly IPartnerService partnerService;
+
+        public PartnersController(IPartnerService partnerService)
         {
-            return View();
+            this.partnerService = partnerService;
+        }
+
+        public IActionResult All([FromQuery] AllPartnersQueryModel query)
+        {
+            var allPosts = partnerService.GetAll(query.CurrentPage, AllPartnersQueryModel.PostPerPage);
+
+            return View(allPosts);
         }
     }
 }

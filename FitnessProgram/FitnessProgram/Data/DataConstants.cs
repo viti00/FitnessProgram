@@ -20,10 +20,10 @@
 
         public class PartnerConstants
         {
-            public const int NameMaxLegth = 100;
+            public const int NameMaxLegth = 30;
 
             public const int DescriptionMinLegth = 2;
-            public const int DescriptionMaxLegth = 10000;
+            public const int DescriptionMaxLegth = 100;
 
             public const int PromoCodeMinLegth = 1;
             public const int PromoCodeMaxLegth = 15;

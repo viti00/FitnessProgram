@@ -37,7 +37,7 @@
             context.SaveChanges();
         }
 
-        public AllPostsQueryViewModel GetAll(int currPage, int postPerPage)
+        public AllPostsQueryModel GetAll(int currPage, int postPerPage)
         {
             var totalPosts = context.Posts.Count();
 
@@ -68,12 +68,11 @@
                 })
                 .ToList();
 
-            var result = new AllPostsQueryViewModel
+            var result = new AllPostsQueryModel
             {
                 Posts = posts,
                 CurrentPage = currPage,
-                MaxPage = maxPage,
-                PostCount = totalPosts
+                MaxPage = maxPage
             };
 
             return result;

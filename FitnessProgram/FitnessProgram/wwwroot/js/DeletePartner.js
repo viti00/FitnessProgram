@@ -1,4 +1,4 @@
-﻿function DeleteBestResult(id) {
+﻿function DeletePartner(id) {
     swal({
         title: "Are you sure?",
         text: "Once deleted, you will not be able to recover this post!",
@@ -13,9 +13,9 @@
                     icon: "success",
                 })
                     .then((okay) => {
-                        $.get(`/admin/bestresults/delete/${id}`, (redirect) => {
+                        $.get(`/admin/partners/delete/${id}`, (redirect) => {
                             debugger;
-                            window.location.replace("https://localhost:7238/BestResults/All");
+                            window.location.replace("https://localhost:7238/Partners/All");
                         });
                     });
 

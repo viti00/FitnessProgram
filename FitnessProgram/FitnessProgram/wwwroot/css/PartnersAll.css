@@ -1,0 +1,119 @@
+﻿.body-section{
+    min-height: 1300px;
+}
+
+@media only screen and (max-width:1200px) {
+    .elements-container {
+        max-width: 770px;
+    }
+
+    .body-section {
+        min-height: 1800px;
+    }
+}
+
+@media only screen and (max-width:800px) {
+    .elements-container {
+        max-width: 400px;
+    }
+
+    .body-section {
+        min-height: 3100px;
+    }
+}
+
+.promocode-field{
+    background-color: grey;
+    border: 1px solid black;
+    color: white;
+    text-align: center;
+    width: 130px;
+}
+
+.promocode-field:hover{
+    cursor: text;
+    color: black;
+    background-color: white;
+}
+
+.card:hover{
+    cursor: default;
+}
+
+svg:hover{
+    cursor: pointer;
+}
+
+path:hover{
+    fill: blue;
+}
+
+.bi:hover{
+    fill: blue;
+}
+
+.bi{
+    margin-left: 3px;
+}
+
+.a-button {
+    width: 100px;
+    background-color: yellow;
+    color: black;
+    border-radius: 15px;
+    margin-left: 28%;
+    margin-top: 10px;
+}
+
+.a-button:hover{
+    background-color: red;
+}
+
+h5{
+    width: 244px;
+    height: 48px;
+}
+
+.dropbtn {
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    border: none;
+    background-color: grey;
+    background-color: grey;
+    border-radius: 50%;
+}
+
+.dropdown {
+    position: absolute;
+    margin-left: 75%;
+    margin-top: -11%;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 15px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}

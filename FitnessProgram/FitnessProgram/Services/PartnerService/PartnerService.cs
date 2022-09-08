@@ -3,6 +3,7 @@
     using FitnessProgram.Areas.Admin.Models.Partners;
     using FitnessProgram.Data;
     using FitnessProgram.Data.Models;
+    using FitnessProgram.Models.Partners;
 
     public class PartnerService : IPartnerService
     {
@@ -10,6 +11,46 @@
 
         public PartnerService(FitnessProgramDbContext context) 
             => this.context = context;
+
+        public AllPartnersQueryModel GetAll(int currPage, int postPerPage)
+        {
+            var totalPosts = context.Partners.Count();
+
+            var maxPage = (int)Math.Ceiling((double)totalPosts / postPerPage);
+
+            if (currPage > maxPage)
+            {
+                if (maxPage == 0)
+                {
+                    maxPage = 1;
+                }
+                currPage = maxPage;
+            }
+
+            var posts = context.Partners
+                .Skip((currPage - 1) * postPerPage)
+                .Take(postPerPage)
+                .Select(x => new PartnersViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = x.Image == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.Image,
+                    Url = x.Url,
+                    PromoCode = x.PromoCode,
+                    Description = x.Description,
+
+                })
+                .ToList();
+
+            var result = new AllPartnersQueryModel
+            {
+                Partners = posts,
+                CurrentPage = currPage,
+                MaxPage = maxPage
+            };
+
+            return result;
+        }
 
         public void AddPartner(PartnerFormModel model)
         {
@@ -52,6 +93,11 @@
             partner.Url = model.Url;
             partner.PromoCode = model.PromoCode;
 
+            context.SaveChanges();
+        }
+        public void DeletePartner(Partner partner)
+        {
+            context.Partners.Remove(partner);
             context.SaveChanges();
         }
 

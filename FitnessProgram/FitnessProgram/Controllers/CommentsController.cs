@@ -11,7 +11,6 @@
         public CommentsController(ICommentService commentService)
             => this.commentService = commentService;
 
-
         public IActionResult Comment(string id, string message)
         {
             commentService.Comment(id, message, User.GetId());

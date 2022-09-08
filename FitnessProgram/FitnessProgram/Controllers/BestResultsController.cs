@@ -13,9 +13,9 @@
             this.bestResultService = bestResultService;
         }
 
-        public IActionResult All([FromQuery] AllBestResultsViewModel model)
+        public IActionResult All([FromQuery] AllBestResultsQueryModel query)
         {
-            var allBestResults = bestResultService.GetAll(model.CurrentPage, AllBestResultsViewModel.PostPerPage);
+            var allBestResults = bestResultService.GetAll(query.CurrentPage, AllBestResultsQueryModel.PostPerPage);
 
             return View(allBestResults);
         }

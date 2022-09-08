@@ -6,7 +6,7 @@
 
     public interface IBestResultService
     {
-        public AllBestResultsViewModel GetAll(int currPage, int postPerPage);
+        public AllBestResultsQueryModel GetAll(int currPage, int postPerPage);
 
         public BestResultDetailsModel GetDetails(int bestresultId);
 

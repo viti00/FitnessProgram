@@ -55,5 +55,25 @@
 
             return RedirectToAction("Index", "Home");
         }
+
+        [Authorize(Roles =AdministratorRoleName)]
+        public IActionResult Delete(int id)
+        {
+            var partner = partnerService.GetPartnerById(id);
+
+            if (!User.IsInRole(AdministratorRoleName))
+            {
+                return Unauthorized();
+            }
+
+            if (partner == null)
+            {
+                return BadRequest();
+            }
+
+            partnerService.DeletePartner(partner);
+
+            return Redirect("https://localhost:7238/Partners/all");
+        }
     }
 }

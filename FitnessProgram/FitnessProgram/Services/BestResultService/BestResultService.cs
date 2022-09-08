@@ -12,11 +12,11 @@
         public BestResultService(FitnessProgramDbContext context)
             => this.context = context;
 
-        public AllBestResultsViewModel GetAll(int currPage, int postPerPage)
+        public AllBestResultsQueryModel GetAll(int currPage, int postPerPage)
         {
-            var totalBestResults = context.BestResults.Count();
+            var totalPosts = context.BestResults.Count();
 
-            var maxPage = (int)Math.Ceiling((double)totalBestResults / postPerPage);
+            var maxPage = (int)Math.Ceiling((double)totalPosts / postPerPage);
 
             if (currPage > maxPage)
             {
@@ -41,7 +41,7 @@
                 })
                 .ToList();
 
-            var result = new AllBestResultsViewModel
+            var result = new AllBestResultsQueryModel
             {
                 BestResults = bestResults,
                 CurrentPage = currPage,

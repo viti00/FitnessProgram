@@ -48,7 +48,7 @@
                                     <button class="dropbtn fa fa-cog fa-spin" style="font-size:24px"></button>
                                     <div class="dropdown-content">
                                         <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                                        <a id="delete-post" data-id="@Model.Id" onclick="DeletePost()">Delete</a>
+                                        <a onclick="DeletePost()">Delete</a>
                                     </div>
                                 </div>
                             }

@@ -1,4 +1,6 @@
 ﻿using FitnessProgram.Models;
+using FitnessProgram.Models.Post;
+using FitnessProgram.Services.PostServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,6 +8,7 @@ namespace FitnessProgram.Controllers
 {
     public class HomeController : Controller
     {
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)

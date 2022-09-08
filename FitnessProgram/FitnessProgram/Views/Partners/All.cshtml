@@ -1,5 +1,102 @@
-﻿@{
+﻿@model AllPartnersQueryModel
+
+@{
     ViewBag.Title = "Partners";
 }
 
-<h1>Hello, from sponsors all</h1>
+@section Styles{
+    <link rel="stylesheet" href="~/css/PostsPartnersBestResultsShared.css" />
+    <link rel="stylesheet" href="~/css/PartnersAll.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+}
+
+    @{
+    var previousPage = Model.CurrentPage - 1;
+    if (previousPage < 1)
+    {
+        previousPage = 1;
+    }
+}
+
+<div class="body-section">
+    <div class="color-overlay"></div>
+
+    <div class="elements">
+        <div class="row">
+            @if (Model.Partners.Count() == 0)
+            {
+                <div class="no-post-container">
+                    <h2>There is no post created</h2>
+                    <span class="small">Be the first who posting</span>
+                </div>
+            }
+            <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-10 offset-xl-1 elements-container">
+                <div class="btn-container float-left">
+                    <a class="btn custom left @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+                       asp-controller="Partners"
+                       asp-action="All"
+                       asp-route-currentPage="@previousPage">&lt&lt&lt</a>
+                </div>
+                <div class="d-flex flex-wrap align-items-center">
+
+                    @foreach (var post in Model.Partners)
+                    {
+                        <div class="a-card">
+                            <div class="card" style="width: 18rem; height: 30rem;">
+                                <img class="card-img-top" src="@post.Image" style="height: 11rem;" alt="Image">
+                                <div class="card-body" style="min-width: 273px;">
+                                    <h5 style="text-align: center;" class="card-title">@post.Name</h5>
+                                    <div>
+                                        <p style="width: 244px; height: 96px; text-align: center;">@post.Description</p>
+                                    </div>
+                                    <div class="input-group justify-content-center">
+                                        <div class="justify-content-between">
+                                            <label class="text-light" for="promocode">Code:</label>
+                                            <input data-id="@post.Id" class="promocode-field" name="promocode" disabled value="@post.PromoCode" />
+                                        </div>
+                                        <div element-id="@post.Id" class="input-group-append">
+                                            <svg onclick="Copy(@post.Id)" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                                                <title>Copy Promocode!</title>
+                                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="align-items-center">
+                                        <a class="a-button btn" href="@post.Url">Visit</a>
+                                    </div>
+                                    @if (User.IsInRole(WebConstants.AdministratorRoleName))
+                                    {
+                                        <div class="dropdown">
+                                            <button class="dropbtn fa fa-cog fa-spin" style="font-size:20px"></button>
+                                            <div class="dropdown-content">
+                                                <a asp-area="Admin" asp-controller="Partners" asp-action="Edit" asp-route-id="@post.Id">Edit</a>
+                                                <a id="delete-post" data-id="@post.Id" onclick="DeletePartner(@post.Id)">Delete</a>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="btn-container float-right">
+                    <a class="btn custom right @(Model.CurrentPage == Model.MaxPage ? "disabled" : string.Empty)"
+                       asp-controller="Partners"
+                       asp-action="All"
+                       asp-route-currentPage="@(Model.CurrentPage + 1)">&gt&gt&gt</a>
+                </div>
+                <div class="page-number-container">
+                    <p class="text-light">Page @Model.CurrentPage from @Model.MaxPage</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/js/CopyClipboard.js"></script>
+    <script src="/js/DeletePartner.js"></script>
+}

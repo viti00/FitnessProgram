@@ -15,9 +15,9 @@
             this.postService = postService;
         }
 
-        public IActionResult All([FromQuery] AllPostsQueryViewModel query)
+        public IActionResult All([FromQuery] AllPostsQueryModel query)
         {
-            var AllPostModel = postService.GetAll(query.CurrentPage, AllPostsQueryViewModel.PostPerPage);
+            var AllPostModel = postService.GetAll(query.CurrentPage, AllPostsQueryModel.PostPerPage);
 
             return View(AllPostModel);
         }

@@ -11,7 +11,6 @@ function Like() {
     $.get(`/likes/likepost/${id}`, (status) => {
         $.get(`/api/likes/${id}`, (likes) => {
             $('#like-btn').text('Liked');
-
             likesConnection.invoke("CountChanger", likes);
         })
     });
