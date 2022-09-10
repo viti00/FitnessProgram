@@ -6,7 +6,8 @@
     position: relative;
     background-color: black;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    max-height: auto;
     display: flex;
     align-items: center;
     justify-content: center;

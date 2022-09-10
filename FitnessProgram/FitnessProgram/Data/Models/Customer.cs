@@ -22,10 +22,12 @@
         [Range(CustomerConstants.AgeMinValue, CustomerConstants.AgeMaxValue)]
         public int Age { get; set; }
 
-
         [Required]
         [MaxLength(CustomerConstants.DesiredResultMaxLength)]
         public string DesiredResults { get; set; }
+
+        [Required]
+        public bool IsApproved { get; set; }
 
         [ForeignKey(nameof(User))]
         public string UserId { get; set; }

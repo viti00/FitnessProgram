@@ -1,0 +1,14 @@
+﻿.card-img-top {
+    width: 8.5rem;
+    height: 9rem;
+}
+
+@media only screen and (max-width:300px) {
+    .card-img-top{
+        width: 6.5rem;
+    }
+    .card-body p{
+        font-size: 14px;
+    }
+}
+

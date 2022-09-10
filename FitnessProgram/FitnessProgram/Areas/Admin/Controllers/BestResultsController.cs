@@ -31,7 +31,7 @@
 
             bestResultService.AddBestResult(model);
 
-            return RedirectToAction("Index", "Home");
+            return Redirect("https://localhost:7238/BestResults/All");
         }
 
         [Authorize(Roles = AdministratorRoleName)]

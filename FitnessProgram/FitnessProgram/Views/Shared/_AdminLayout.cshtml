@@ -24,12 +24,26 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Posts" asp-action="All">Posts</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="Admin" asp-controller="BestResults" asp-action="Add">Add Best Result</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Partners" asp-action="Add">Add Partners</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="BestResults" asp-action="All">Best Results</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Partners" asp-action="Add">Add Partner</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Partners" asp-action="All">Partners</a>
+                        </li>
+                        <li class="nav-item float-end">
+                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Customers" asp-action="Approved">Customers</a>
+                        </li>
+                        <li class="nav-item float-end">
+                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Customers" asp-action="AwaitingApproval">Awaiting Approval</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

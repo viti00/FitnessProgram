@@ -1,6 +1,7 @@
 ﻿.body-section {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    max-height: auto;
     background-color: black;
     display: flex;
     align-items: flex-start;
@@ -8,7 +9,6 @@
     overflow: hidden;
     position: relative;
     padding-top: 30px;
-    min-height: 900px;
 }
 
 .color-overlay {
@@ -145,4 +145,34 @@ body::-webkit-scrollbar {
 
 .a-card {
     margin: 40px 20px 40px 20px;
+}
+
+.card{
+    width: 18rem;
+    height: 17rem;
+}
+
+.card-body{
+    width: 273px;
+}
+
+@media only screen and (max-width:1200px) {
+    .elements-container {
+        max-width: 100%;
+    }
+}
+
+@media only screen and (max-width:300px) {
+    .card{
+        width: 14rem;
+    }
+    .card-body{
+        width: 184px;
+    }
+    .card-body h5{
+        font-size: 14px;
+    }
+    .elements-container {
+        max-width: 98%;
+    }
 }

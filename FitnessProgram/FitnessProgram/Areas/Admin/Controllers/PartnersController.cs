@@ -31,7 +31,7 @@
 
             partnerService.AddPartner(model);
 
-            return RedirectToAction("Index", "Home");
+            return Redirect("https://localhost:7238/Partners/all");
         }
 
         [Authorize(Roles = AdministratorRoleName)]
@@ -53,7 +53,7 @@
 
             partnerService.EditPartner(id, model);
 
-            return RedirectToAction("Index", "Home");
+            return Redirect("https://localhost:7238/Partners/all");
         }
 
         [Authorize(Roles =AdministratorRoleName)]

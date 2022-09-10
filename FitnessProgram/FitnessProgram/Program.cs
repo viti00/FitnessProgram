@@ -10,6 +10,7 @@ using FitnessProgram.Services.CommentService;
 using FitnessProgram.Services.BestResultService;
 using FitnessProgram.Services.PartnerService;
 using FitnessProgram.Controllers.Hubs;
+using FitnessProgram.Services.CustomerService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,7 @@ builder.Services.AddTransient<ILikeService, LikeService>();
 builder.Services.AddTransient<ICommentService, CommentService>();
 builder.Services.AddTransient<IBestResultService, BestResultService>();
 builder.Services.AddTransient<IPartnerService, PartnerService>();
+builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddSignalR();
 
 var app = builder.Build();

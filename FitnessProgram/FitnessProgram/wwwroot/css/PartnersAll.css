@@ -1,35 +1,13 @@
-﻿.body-section{
-    min-height: 1300px;
-}
-
-@media only screen and (max-width:1200px) {
-    .elements-container {
-        max-width: 770px;
-    }
-
-    .body-section {
-        min-height: 1800px;
-    }
-}
-
-@media only screen and (max-width:800px) {
-    .elements-container {
-        max-width: 400px;
-    }
-
-    .body-section {
-        min-height: 3100px;
-    }
-}
-
-.promocode-field{
+﻿.promocode-field{
     background-color: grey;
     border: 1px solid black;
     color: white;
     text-align: center;
     width: 130px;
 }
-
+.card-title{
+    text-align: center;
+}
 .promocode-field:hover{
     cursor: text;
     color: black;
@@ -116,4 +94,45 @@ h5{
 
 .dropdown:hover .dropdown-content {
     display: block;
+}
+
+.card{
+    width: 18rem;
+    height: 30rem;
+}
+
+.description{
+    width: 244px;
+    height: 96px;
+}
+
+.card-img-top{
+    height: 11rem;
+}
+
+@media only screen and (max-width:300px) {
+    .card-body h5 {
+        width: auto;
+        font-size: 14px;
+    }
+    .description{
+        width: 184px;
+    }
+    .card{
+        width: 14rem;
+    }
+    .promocode-field{
+        width: 100px;
+        font-size: 12px;
+    }
+    label{
+        font-size: 12px;
+    }
+    svg{
+        width: 16px;
+        height: 16px;
+    }
+    .a-button {
+        margin-left: 23%;
+    }
 }
