@@ -101,7 +101,8 @@
                                     Message = x.Message,
                                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                                     UserProfilePictire = x.Creator.ProfilePicture,
-                                    UserUsername = x.Creator.UserName
+                                    UserUsername = x.Creator.UserName,
+                                    UserId = x.CreatorId
                                 })
                                 .ToList(),
                     Creator = new UserViewModel

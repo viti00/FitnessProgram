@@ -1,4 +1,9 @@
-﻿@model CommentViewModel
+﻿@using FitnessProgram.Data.Models
+@using FitnessProgram.Infrastructure
+@using Microsoft.AspNetCore.Identity
+
+@model CommentViewModel
+@inject SignInManager<User> SignInManager
 
 
 <div class="d-flex flex-start mb-4">
@@ -7,10 +12,13 @@
          height="65" />
     <div class="card w-100">
         <div class="card-body p-4">
-            <div class="float-end">
-                <button onclick="OnEdit(@Model.Id)" class="fa fa-pencil btns" style="font-size:24px"></button>
-                <button onclick="Delete(@Model.Id)" data-id="@Model.Id" style="font-size:24px;color:red" class="fa fa-close btns"></button>
-            </div>
+            @if (SignInManager.IsSignedIn(User) && User.GetId() == @Model.UserId || User.IsInRole(WebConstants.AdministratorRoleName))
+            {
+                <div class="float-end">
+                    <button onclick="OnEdit(@Model.Id)" class="fa fa-pencil btns" style="font-size:24px"></button>
+                    <button onclick="Delete(@Model.Id)" data-id="@Model.Id" style="font-size:24px;color:red" class="fa fa-close btns"></button>
+                </div>
+            }
             <div>
                 <h5>@Model.UserUsername</h5>
                 <p class="small">Posted on: @Model.CreatedOn</p>

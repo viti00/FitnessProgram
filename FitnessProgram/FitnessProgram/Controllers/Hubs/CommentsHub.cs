@@ -1,14 +1,12 @@
 ﻿namespace FitnessProgram.Controllers.Hubs
 {
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.SignalR;
 
-    [Authorize]
     public class CommentsHub : Hub
     {
         public async Task CreateComment(string element, int count)
         {
-            await this.Clients.All.SendAsync("Comment", element, count);
+            await this.Clients.Others.SendAsync("Comment", element, count);
         }
 
         public async Task EditComment(string message, string commentId)

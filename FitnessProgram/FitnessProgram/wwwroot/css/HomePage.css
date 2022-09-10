@@ -62,15 +62,15 @@
     height: 75px;
 }
 
-    #btn:hover {
-        background-color: yellow;
-        color: black;
-        transform: scale(1.1);
-        transition: all linear 200ms;
-        z-index: 1;
-        box-shadow: 1px 1px 10px rgba(0,0,0,.3);
-        cursor: pointer;
-    }
+#btn:hover {
+    background-color: yellow;
+    color: black;
+    transform: scale(1.1);
+    transition: all linear 200ms;
+    z-index: 1;
+    box-shadow: 1px 1px 10px rgba(0,0,0,.3);
+    cursor: pointer;
+}
 
 .text-and-btn {
     opacity: 0.9;

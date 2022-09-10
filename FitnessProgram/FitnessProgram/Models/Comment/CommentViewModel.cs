@@ -11,5 +11,7 @@
         public string UserProfilePictire { get; init; }
 
         public string UserUsername { get; init; }
+
+        public string UserId { get; init; }
     }
 }
