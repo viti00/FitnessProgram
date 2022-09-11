@@ -5,7 +5,7 @@
 
     public interface IPostService
     {
-        public AllPostsQueryModel GetAll(int currPage, int postPerPage);
+        public AllPostsQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator);
 
         public void Create(PostFormModel model, string userId);
 

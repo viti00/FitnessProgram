@@ -6,7 +6,7 @@
 
     public interface IPartnerService
     {
-        public AllPartnersQueryModel GetAll(int currPage, int postPerPage);
+        public AllPartnersQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator);
 
         public void AddPartner(PartnerFormModel model);
 

@@ -6,18 +6,25 @@
     using FitnessProgram.Models.Post;
     using FitnessProgram.Services.CommentService;
     using FitnessProgram.Services.LikeService;
+    using Microsoft.Extensions.Caching.Memory;
+    using static SharedMethods;
 
     public class PostService : IPostService
     {
         private readonly FitnessProgramDbContext context;
         private readonly ICommentService commentService;
         private readonly ILikeService likeService;
+        private readonly IMemoryCache cache;
 
-        public PostService(FitnessProgramDbContext context, ICommentService commentService, ILikeService likeService)
+        public PostService(FitnessProgramDbContext context,
+                            ICommentService commentService,
+                            ILikeService likeService,
+                            IMemoryCache cache)
         {
             this.context = context;
             this.commentService = commentService;
             this.likeService = likeService;
+            this.cache = cache;
         }
         public void Create(PostFormModel model, string creatorId)
         {
@@ -37,40 +44,86 @@
             context.SaveChanges();
         }
 
-        public AllPostsQueryModel GetAll(int currPage, int postPerPage)
+        public AllPostsQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator)
         {
-            var totalPosts = context.Posts.Count();
+            int totalPosts;
 
-            var maxPage = (int)Math.Ceiling((double)totalPosts / postPerPage);
+            const string postsCache = "PostCache";
 
-            if (currPage > maxPage)
+            List<Post> postsAll;
+
+            List<PostViewModel> currPagePosts;
+
+            if (isAdministrator)
             {
-                if(maxPage == 0)
-                {
-                    maxPage = 1;
-                }
-                currPage = maxPage;
-            }
+                totalPosts = context.Posts.Count();
 
-            var posts = context.Posts
-                .OrderByDescending(x=> x.CreatedOn)
-                .Skip((currPage-1)*postPerPage)
+                currPagePosts = context.Posts
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip((currPage - 1) * postPerPage)
                 .Take(postPerPage)
                 .Select(x => new PostViewModel
                 {
                     PostId = x.Id,
                     Title = x.Title,
-                    ImageUrl = x.ImageUrl == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png": x.ImageUrl,
+                    ImageUrl = x.ImageUrl == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.ImageUrl,
                     LikesCount = x.Likes.Count(),
                     CommentsCount = x.Comments.Count(),
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
 
                 })
                 .ToList();
+            }
+            else
+            {
+                postsAll = cache.Get<List<Post>>(postsCache);
+                if(postsAll == null)
+                {
+                    postsAll = context.Posts
+                    .OrderByDescending(x => x.CreatedOn)
+                    .Select(x=> new Post
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        ImageUrl = x.ImageUrl,
+                        Text = x.Text,
+                        CreatedOn = x.CreatedOn,
+                        Likes = x.Likes,
+                        Comments = x.Comments,
+                        CreatorId = x.CreatorId
+                    })
+                    .ToList();
+
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
+
+                    cache.Set(postsCache, postsAll, cacheOptions);
+                }
+
+                totalPosts = postsAll.Count();
+
+                currPagePosts =
+                    postsAll
+                    .Skip((currPage - 1) * postPerPage)
+                    .Take(postPerPage)
+                    .Select(x => new PostViewModel
+                    {
+                        PostId = x.Id,
+                        Title = x.Title,
+                        ImageUrl = x.ImageUrl == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.ImageUrl,
+                        LikesCount = x.Likes.Count(),
+                        CommentsCount = x.Comments.Count(),
+                        CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
+                    }).ToList();
+            }
+
+            var maxPage = CalcMaxPage(totalPosts, postPerPage);
+
+            currPage = GetCurrPage(currPage, maxPage);
 
             var result = new AllPostsQueryModel
             {
-                Posts = posts,
+                Posts = currPagePosts,
                 CurrentPage = currPage,
                 MaxPage = maxPage
             };

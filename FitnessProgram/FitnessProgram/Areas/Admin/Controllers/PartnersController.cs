@@ -1,6 +1,7 @@
 ﻿namespace FitnessProgram.Areas.Admin.Controllers
 {
     using FitnessProgram.Areas.Admin.Models.Partners;
+    using FitnessProgram.Infrastructure;
     using FitnessProgram.Services.PartnerService;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -61,7 +62,7 @@
         {
             var partner = partnerService.GetPartnerById(id);
 
-            if (!User.IsInRole(AdministratorRoleName))
+            if (!User.IsAdministrator())
             {
                 return Unauthorized();
             }

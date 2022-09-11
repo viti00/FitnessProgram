@@ -1,6 +1,7 @@
 ﻿namespace FitnessProgram.Areas.Admin.Controllers
 {
     using FitnessProgram.Areas.Admin.Models.BestResult;
+    using FitnessProgram.Infrastructure;
     using FitnessProgram.Services.BestResultService;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -61,7 +62,7 @@
         {
             var bestResult = bestResultService.GetBestResultById(id);
 
-            if (!User.IsInRole(AdministratorRoleName))
+            if (!User.IsAdministrator())
             {
                 return Unauthorized();
             }

@@ -43,6 +43,7 @@ builder.Services.AddTransient<IBestResultService, BestResultService>();
 builder.Services.AddTransient<IPartnerService, PartnerService>();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddSignalR();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

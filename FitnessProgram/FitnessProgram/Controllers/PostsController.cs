@@ -17,9 +17,11 @@
 
         public IActionResult All([FromQuery] AllPostsQueryModel query)
         {
-            var AllPostModel = postService.GetAll(query.CurrentPage, AllPostsQueryModel.PostPerPage);
+            var isAdministator = User.IsAdministrator();
 
-            return View(AllPostModel);
+            var currPagePosts = postService.GetAll(query.CurrentPage, AllPostsQueryModel.PostPerPage, isAdministator);
+
+            return View(currPagePosts);
         }
 
         [Authorize]
@@ -53,7 +55,7 @@
                 return BadRequest();
             }
 
-            if(!User.IsInRole(WebConstants.AdministratorRoleName) && post.CreatorId != userId)
+            if(!User.IsAdministrator() && post.CreatorId != userId)
             {
                 return Unauthorized();
             }
@@ -100,7 +102,7 @@
                 BadRequest();
             }
 
-            if(!User.IsInRole(WebConstants.AdministratorRoleName) && post.CreatorId != userId)
+            if(!User.IsAdministrator() && post.CreatorId != userId)
             {
                 return Unauthorized();
             }

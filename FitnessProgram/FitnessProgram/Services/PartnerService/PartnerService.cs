@@ -4,30 +4,66 @@
     using FitnessProgram.Data;
     using FitnessProgram.Data.Models;
     using FitnessProgram.Models.Partners;
+    using Microsoft.Extensions.Caching.Memory;
+    using static SharedMethods;
 
     public class PartnerService : IPartnerService
     {
         private readonly FitnessProgramDbContext context;
+        private readonly IMemoryCache cache;
 
-        public PartnerService(FitnessProgramDbContext context) 
-            => this.context = context;
-
-        public AllPartnersQueryModel GetAll(int currPage, int postPerPage)
+        public PartnerService(FitnessProgramDbContext context, IMemoryCache cache)
         {
-            var totalPosts = context.Partners.Count();
+            this.context = context;
+            this.cache = cache;
+        }
 
-            var maxPage = (int)Math.Ceiling((double)totalPosts / postPerPage);
+        public AllPartnersQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator)
+        {
+            const string partnersCache = "PartnersCache";
 
-            if (currPage > maxPage)
+            int totalPosts;
+
+            List<Partner> partners;
+
+            List<PartnersViewModel> currPagePartners;
+
+            if (isAdministrator)
             {
-                if (maxPage == 0)
-                {
-                    maxPage = 1;
-                }
-                currPage = maxPage;
-            }
+                totalPosts = context.Partners.Count();
 
-            var posts = context.Partners
+                currPagePartners = context.Partners
+                .Skip((currPage - 1) * postPerPage)
+                .Take(postPerPage)
+                .Select(x => new PartnersViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = x.Image == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.Image,
+                    Url = x.Url,
+                    PromoCode = x.PromoCode,
+                    Description = x.Description,
+
+                })
+                .ToList();
+            }
+            else
+            {
+                partners = cache.Get<List<Partner>>(partnersCache);
+                if (partners == null)
+                {
+                    partners = context.Partners
+                    .ToList();
+
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
+
+                    cache.Set(partnersCache, partners, cacheOptions);
+                }
+
+                totalPosts = partners.Count();
+
+                currPagePartners = partners
                 .Skip((currPage - 1) * postPerPage)
                 .Take(postPerPage)
                 .Select(x => new PartnersViewModel
@@ -42,9 +78,14 @@
                 })
                 .ToList();
 
+            }
+            var maxPage = CalcMaxPage(totalPosts, postPerPage);
+
+            currPage = GetCurrPage(currPage, maxPage);
+
             var result = new AllPartnersQueryModel
             {
-                Partners = posts,
+                Partners = currPagePartners,
                 CurrentPage = currPage,
                 MaxPage = maxPage
             };

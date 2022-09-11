@@ -4,30 +4,36 @@
     using FitnessProgram.Data;
     using FitnessProgram.Data.Models;
     using FitnessProgram.Models.BestResult;
+    using Microsoft.Extensions.Caching.Memory;
+    using static SharedMethods;
 
     public class BestResultService : IBestResultService
     {
         private readonly FitnessProgramDbContext context;
+        private readonly IMemoryCache cache;
 
-        public BestResultService(FitnessProgramDbContext context)
-            => this.context = context;
-
-        public AllBestResultsQueryModel GetAll(int currPage, int postPerPage)
+        public BestResultService(FitnessProgramDbContext context, IMemoryCache cache)
         {
-            var totalPosts = context.BestResults.Count();
+            this.context = context;
+            this.cache = cache;
+        }
 
-            var maxPage = (int)Math.Ceiling((double)totalPosts / postPerPage);
 
-            if (currPage > maxPage)
+        public AllBestResultsQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator)
+        {
+            const string bestResultCache = "BestResultCache";
+
+            int totalPosts;
+
+            List<BestResultViewModel> currPageBestResults;
+
+            List<BestResult> bestResults;
+
+            if (isAdministrator)
             {
-                if (maxPage == 0)
-                {
-                    maxPage = 1;
-                }
-                currPage = maxPage;
-            }
+                totalPosts = context.BestResults.Count();
 
-            var bestResults = context.BestResults
+                currPageBestResults = context.BestResults
                 .OrderByDescending(x => x.CreatedOn)
                 .Skip((currPage - 1) * postPerPage)
                 .Take(postPerPage)
@@ -40,10 +46,45 @@
 
                 })
                 .ToList();
+            }
+            else
+            {
+                bestResults = cache.Get<List<BestResult>>(bestResultCache);
+                if (bestResults == null)
+                {
+                    bestResults = context.BestResults
+                    .OrderByDescending(x => x.CreatedOn)
+                    .ToList();
+
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
+
+                    cache.Set(bestResultCache, bestResults, cacheOptions);
+                }
+
+                totalPosts = bestResults.Count();
+
+                currPageBestResults = bestResults
+                .Skip((currPage - 1) * postPerPage)
+                .Take(postPerPage)
+                .Select(x => new BestResultViewModel
+                {
+                    Id = x.Id,
+                    ImageUrlBefore = x.ImageUrlBefore,
+                    ImageUrlAfter = x.ImageUrlAfter,
+                    Story = x.Story
+
+                })
+                .ToList();
+            }
+
+            var maxPage = CalcMaxPage(totalPosts, postPerPage);
+
+            currPage = GetCurrPage(currPage, maxPage);
 
             var result = new AllBestResultsQueryModel
             {
-                BestResults = bestResults,
+                BestResults = currPageBestResults,
                 CurrentPage = currPage,
                 MaxPage = maxPage
             };

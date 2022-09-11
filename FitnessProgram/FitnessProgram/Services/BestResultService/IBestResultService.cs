@@ -6,7 +6,7 @@
 
     public interface IBestResultService
     {
-        public AllBestResultsQueryModel GetAll(int currPage, int postPerPage);
+        public AllBestResultsQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator);
 
         public BestResultDetailsModel GetDetails(int bestresultId);
 

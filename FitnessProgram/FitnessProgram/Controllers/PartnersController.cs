@@ -1,5 +1,6 @@
 ﻿namespace FitnessProgram.Controllers
 {
+    using FitnessProgram.Infrastructure;
     using FitnessProgram.Models.Partners;
     using FitnessProgram.Services.PartnerService;
     using Microsoft.AspNetCore.Authorization;
@@ -15,7 +16,9 @@
 
         public IActionResult All([FromQuery] AllPartnersQueryModel query)
         {
-            var allPosts = partnerService.GetAll(query.CurrentPage, AllPartnersQueryModel.PostPerPage);
+            var isAdministrator = User.IsAdministrator();
+
+            var allPosts = partnerService.GetAll(query.CurrentPage, AllPartnersQueryModel.PostPerPage, isAdministrator);
 
             return View(allPosts);
         }
