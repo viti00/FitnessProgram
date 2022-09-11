@@ -1,4 +1,4 @@
-﻿@if(User.IsInRole(WebConstants.AdministratorRoleName)){
+﻿@if(User.IsAdministrator()){
     Layout = "_AdminLayout";
 }
 else{

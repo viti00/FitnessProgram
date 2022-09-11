@@ -1,5 +1,4 @@
 ﻿@using FitnessProgram.Data.Models
-@using FitnessProgram.Infrastructure
 @using Microsoft.AspNetCore.Identity
 
 @model CommentViewModel
@@ -12,7 +11,7 @@
          height="65" />
     <div class="card w-100">
         <div class="card-body p-4">
-            @if (SignInManager.IsSignedIn(User) && User.GetId() == @Model.UserId || User.IsInRole(WebConstants.AdministratorRoleName))
+            @if (SignInManager.IsSignedIn(User) && User.GetId() == @Model.UserId || User.IsAdministrator())
             {
                 <div class="float-end">
                     <button onclick="OnEdit(@Model.Id)" class="fa fa-pencil btns" style="font-size:24px"></button>

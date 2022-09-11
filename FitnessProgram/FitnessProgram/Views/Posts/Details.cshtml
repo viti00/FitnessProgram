@@ -17,7 +17,7 @@
 
 @if (isSignIn)
 {
-    if (User.IsInRole(WebConstants.AdministratorRoleName) || Model.Creator.Id == User.GetId())
+    if (User.IsAdministrator() || Model.Creator.Id == User.GetId())
     {
         ViewBag.IsCreator = true;
     }
@@ -106,7 +106,7 @@
                                 }
                             </div>
                         }
-                        @if (isSignIn && !User.IsInRole(WebConstants.AdministratorRoleName))
+                        @if (isSignIn && !User.IsAdministrator())
                         {
                             <div id="comment" class="input-group">
                                 <textarea id="message" class="form-control" name="message" placeholder="Add comment" rows="2"></textarea>

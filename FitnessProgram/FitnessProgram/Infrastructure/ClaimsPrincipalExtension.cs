@@ -2,6 +2,7 @@
 namespace FitnessProgram.Infrastructure
 {
     using System.Security.Claims;
+    using static WebConstants;
 
     public static class ClaimsPrincipalExtension
     {
@@ -16,6 +17,11 @@ namespace FitnessProgram.Infrastructure
 
             return id;
             
+        }
+
+        public static bool IsAdministrator(this ClaimsPrincipal user)
+        {
+            return user.IsInRole(AdministratorRoleName);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿@model BestResultDetailsModel
+﻿@using FitnessProgram.Infrastructure
+@model BestResultDetailsModel
 
 @{
     ViewBag.Title = "BestResult Details";
@@ -24,7 +25,7 @@
                                         Posted on - @Model.CreatedOn
                                     </p>
                                 </div>
-                                @if (User.IsInRole(WebConstants.AdministratorRoleName))
+                                @if (User.IsAdministrator())
                                 {
                                 <div class="dropdown">
                                     <button class="dropbtn fa fa-cog fa-spin" style="font-size:24px"></button>

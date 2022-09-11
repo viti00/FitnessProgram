@@ -29,7 +29,7 @@
 <div class="body-section">
     <div class="color-overlay"></div>
     <div class="elements">
-        @if (isSignIn && !User.IsInRole(WebConstants.AdministratorRoleName))
+        @if (isSignIn && !User.IsAdministrator())
         {
             <div class="btn-create-container">
                 <a asp-controller="Posts" asp-action="Create" class="btn create-btn">Create Post</a>
@@ -52,7 +52,8 @@
                 </div>
             }
             <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-10 offset-xl-1 elements-container">
-                <div class="btn-container float-left">
+                <partial name="_PostsContainerPartial" model="Model"/>
+                @*<div class="btn-container float-left">
                     <a class="btn custom left @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
                        asp-controller="Posts"
                        asp-action="All"
@@ -85,7 +86,7 @@
                 </div>
                 <div class="page-number-container">
                     <p class="text-light">Page @Model.CurrentPage from @Model.MaxPage</p>
-                </div>
+                </div>*@
             </div>
 
         </div>
