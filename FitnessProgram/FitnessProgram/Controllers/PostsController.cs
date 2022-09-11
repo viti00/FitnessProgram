@@ -25,6 +25,14 @@
         }
 
         [Authorize]
+        public IActionResult MyPosts([FromQuery] AllPostsQueryModel query)
+        {
+            var myPosts = postService.GetMy(User.GetId(), query.CurrentPage, AllPostsQueryModel.PostPerPage);
+
+            return View(myPosts);
+        }
+
+        [Authorize]
         public IActionResult Create()
         {
             return View();

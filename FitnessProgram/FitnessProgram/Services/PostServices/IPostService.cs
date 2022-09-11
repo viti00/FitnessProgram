@@ -7,6 +7,8 @@
     {
         public AllPostsQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator);
 
+        public AllPostsQueryModel GetMy(string userId, int currPage, int postPerPage);
+
         public void Create(PostFormModel model, string userId);
 
         public PostDetailsModel GetPostDetails(string postId, string userId);

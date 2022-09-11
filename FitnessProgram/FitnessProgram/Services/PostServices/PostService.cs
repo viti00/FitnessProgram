@@ -44,6 +44,39 @@
             context.SaveChanges();
         }
 
+        public AllPostsQueryModel GetMy(string userId, int currPage, int postPerPage)
+        {
+            int totalPosts = context.Posts.Where(x => x.CreatorId == userId).Count();
+
+            int maxPage = CalcMaxPage(totalPosts, currPage);
+            currPage = GetCurrPage(currPage, maxPage);
+
+            var myPosts = context.Posts
+                .OrderByDescending(x=> x.CreatedOn)
+                .Where(x => x.CreatorId == userId)
+                .Skip((currPage - 1) * postPerPage)
+                .Take(postPerPage)
+                .Select(x => new PostViewModel
+                {
+                    PostId = x.Id,
+                    Title = x.Title,
+                    ImageUrl = x.ImageUrl == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.ImageUrl,
+                    LikesCount = x.Likes.Count(),
+                    CommentsCount = x.Comments.Count(),
+                    CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
+
+                })
+                .ToList();
+            var result = new AllPostsQueryModel
+            {
+                Posts = myPosts,
+                MaxPage = maxPage,
+                CurrentPage = currPage
+            };
+
+            return result;
+        }
+
         public AllPostsQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator)
         {
             int totalPosts;
