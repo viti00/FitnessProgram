@@ -18,7 +18,15 @@ namespace FitnessProgram.Data
 
         public DbSet<BestResult> BestResults { get; set; }
 
-        public DbSet<UserLikedPost> userLikedPosts { get; set; }
+        public DbSet<UserLikedPost> UserLikedPosts { get; set; }
+
+        public DbSet<ProfilePhoto> ProfilePhotos { get; set; }
+
+        public DbSet<PostPhoto> PostPhotos { get; set; }
+
+        public DbSet<BestResultPhoto> BestResultPhotos { get; set; }
+
+        public DbSet<PartnerPhoto> PartnerPhotos { get; set; }
 
         public FitnessProgramDbContext(DbContextOptions<FitnessProgramDbContext> options)
             : base(options)

@@ -42,7 +42,10 @@ builder.Services.AddTransient<ICommentService, CommentService>();
 builder.Services.AddTransient<IBestResultService, BestResultService>();
 builder.Services.AddTransient<IPartnerService, PartnerService>();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(e=>
+{
+    e.MaximumReceiveMessageSize = 102400000;
+});
 builder.Services.AddMemoryCache();
 
 var app = builder.Build();

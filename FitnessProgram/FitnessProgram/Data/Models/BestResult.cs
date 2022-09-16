@@ -8,10 +8,7 @@
         public int Id { get; set; }
 
         [Required]
-        public string ImageUrlBefore { get; set; }
-
-        [Required]
-        public string ImageUrlAfter { get; set; }
+        public List<BestResultPhoto> Photos { get; set; }
 
         [Required]
         public DateTime CreatedOn { get; set; }

@@ -12,6 +12,9 @@
         private readonly FitnessProgramDbContext context;
         private readonly IMemoryCache cache;
 
+        const string typeBefore = "Before";
+        const string typeAfter = "After";
+
         public BestResultService(FitnessProgramDbContext context, IMemoryCache cache)
         {
             this.context = context;
@@ -40,8 +43,8 @@
                 .Select(x => new BestResultViewModel
                 {
                     Id = x.Id,
-                    ImageUrlBefore = x.ImageUrlBefore,
-                    ImageUrlAfter = x.ImageUrlAfter,
+                    BeforePhotos = x.Photos.Where(x=> x.PhotoType == typeBefore).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
+                    AfterPhotos = x.Photos.Where(x=> x.PhotoType == typeAfter).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
                     Story = x.Story
 
                 })
@@ -70,8 +73,8 @@
                 .Select(x => new BestResultViewModel
                 {
                     Id = x.Id,
-                    ImageUrlBefore = x.ImageUrlBefore,
-                    ImageUrlAfter = x.ImageUrlAfter,
+                    BeforePhotos = x.Photos.Where(x => x.PhotoType == typeBefore).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
+                    AfterPhotos = x.Photos.Where(x => x.PhotoType == typeAfter).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
                     Story = x.Story
 
                 })
@@ -95,12 +98,13 @@
         public BestResultDetailsModel GetDetails(int bestresultId)
         {
             var bestResult = GetBestResultById(bestresultId);
+            bestResult.Photos = GetPhotos(bestresultId);
 
             var model = new BestResultDetailsModel
             {
                 Id = bestResult.Id,
-                ImageUrlBefore = bestResult.ImageUrlBefore,
-                ImageUrlAfter = bestResult.ImageUrlAfter,
+                BeforePhotos = bestResult.Photos.Where(x=> x.PhotoType == typeBefore).Select(x=> Convert.ToBase64String(x.Bytes)).ToList(),
+                AfterPhotos = bestResult.Photos.Where(x => x.PhotoType == typeAfter).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
                 CreatedOn = bestResult.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                 Story = bestResult.Story
             };
@@ -111,10 +115,11 @@
 
         public void AddBestResult(BestResultFormModel model)
         {
+            var photos = PrepareCreatePhotos(model.BeforeFiles, model.AfterFiles);
+
             var bestResult = new BestResult
             {
-                ImageUrlBefore = model.ImageUrlBefore,
-                ImageUrlAfter = model.ImageUrlAfter,
+                Photos = photos,
                 CreatedOn = DateTime.Now,
                 Story = model.Story
             };
@@ -129,8 +134,6 @@
 
             var editModel = new BestResultFormModel
             {
-                ImageUrlAfter = bestResult.ImageUrlAfter,
-                ImageUrlBefore = bestResult.ImageUrlBefore,
                 Story = bestResult.Story
             };
 
@@ -140,9 +143,12 @@
         public void EditBestResult(int bestResultId,BestResultFormModel model)
         {
             var bestResult = GetBestResultById(bestResultId);
+            // get old photos
+            bestResult.Photos = GetPhotos(bestResultId);
 
-            bestResult.ImageUrlBefore = model.ImageUrlBefore;
-            bestResult.ImageUrlAfter = model.ImageUrlAfter;
+            var photos = PrepareCreatePhotos(model.BeforeFiles, model.AfterFiles);
+
+            bestResult.Photos = photos;
             bestResult.Story = model.Story;
 
             context.SaveChanges();
@@ -157,5 +163,56 @@
         public BestResult GetBestResultById(int id)
             => context.BestResults.FirstOrDefault(x => x.Id == id);
 
+
+        private List<BestResultPhoto> PrepareCreatePhotos(IFormFileCollection beforeFiles, IFormFileCollection afterFiles)
+        {
+            List<BestResultPhoto> photos = new List<BestResultPhoto>();
+            Parallel.Invoke(() =>
+            {
+                CreatePhotos(beforeFiles, typeBefore, photos);
+            },
+            () =>
+            {
+                CreatePhotos(afterFiles, typeAfter, photos);
+            });
+
+            return photos;
+        }
+
+        private List<BestResultPhoto> CreatePhotos(IFormFileCollection files, string type, List<BestResultPhoto> photos)
+        {
+            Task.Run(async () =>
+            {
+                if (files != null)
+                {
+                    foreach (var file in files)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await file.CopyToAsync(memoryStream);
+
+                            if (memoryStream.Length < 2097152)
+                            {
+                                var newphoto = new BestResultPhoto()
+                                {
+                                    Bytes = memoryStream.ToArray(),
+                                    Description = file.FileName,
+                                    FileExtension = Path.GetExtension(file.FileName),
+                                    Size = file.Length,
+                                    PhotoType = type
+                                };
+                                photos.Add(newphoto);
+                            }
+                        }
+                    }
+                }
+            }).GetAwaiter()
+               .GetResult();
+
+            return photos;
+        }
+
+        private List<BestResultPhoto> GetPhotos(int bestResultId)
+            => context.BestResultPhotos.Where(x => x.BestResultId == bestResultId).ToList();
     }
 }

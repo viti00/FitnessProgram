@@ -4,6 +4,7 @@ using FitnessProgram.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessProgram.Data.Migrations
 {
     [DbContext(typeof(FitnessProgramDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220913134450_UserWorkingWithData")]
+    partial class UserWorkingWithData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,6 +35,14 @@ namespace FitnessProgram.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ImageUrlAfter")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrlBefore")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Story")
                         .IsRequired()
                         .HasMaxLength(10000)
@@ -41,43 +51,6 @@ namespace FitnessProgram.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BestResults");
-                });
-
-            modelBuilder.Entity("FitnessProgram.Data.Models.BestResultPhoto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("BestResultId")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("Bytes")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhotoType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Size")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BestResultId");
-
-                    b.ToTable("BestResultPhotos");
                 });
 
             modelBuilder.Entity("FitnessProgram.Data.Models.Comment", b =>
@@ -156,6 +129,34 @@ namespace FitnessProgram.Data.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("FitnessProgram.Data.Models.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<byte[]>("Bytes")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Size")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Image");
+                });
+
             modelBuilder.Entity("FitnessProgram.Data.Models.Partner", b =>
                 {
                     b.Property<int>("Id")
@@ -168,6 +169,10 @@ namespace FitnessProgram.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -188,40 +193,6 @@ namespace FitnessProgram.Data.Migrations
                     b.ToTable("Partners");
                 });
 
-            modelBuilder.Entity("FitnessProgram.Data.Models.PartnerPhoto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<byte[]>("Bytes")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PartnerId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Size")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PartnerId")
-                        .IsUnique();
-
-                    b.ToTable("PartnerPhotos");
-                });
-
             modelBuilder.Entity("FitnessProgram.Data.Models.Post", b =>
                 {
                     b.Property<string>("Id")
@@ -233,6 +204,9 @@ namespace FitnessProgram.Data.Migrations
                     b.Property<string>("CreatorId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -249,68 +223,6 @@ namespace FitnessProgram.Data.Migrations
                     b.HasIndex("CreatorId");
 
                     b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("FitnessProgram.Data.Models.PostPhoto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<byte[]>("Bytes")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("Size")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostPhotos");
-                });
-
-            modelBuilder.Entity("FitnessProgram.Data.Models.ProfilePhoto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<byte[]>("Bytes")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileExtension")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Size")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProfilePhotos");
                 });
 
             modelBuilder.Entity("FitnessProgram.Data.Models.User", b =>
@@ -395,7 +307,7 @@ namespace FitnessProgram.Data.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("UserLikedPosts");
+                    b.ToTable("userLikedPosts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -535,15 +447,6 @@ namespace FitnessProgram.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FitnessProgram.Data.Models.BestResultPhoto", b =>
-                {
-                    b.HasOne("FitnessProgram.Data.Models.BestResult", "BestResult")
-                        .WithMany("Photos")
-                        .HasForeignKey("BestResultId");
-
-                    b.Navigation("BestResult");
-                });
-
             modelBuilder.Entity("FitnessProgram.Data.Models.Comment", b =>
                 {
                     b.HasOne("FitnessProgram.Data.Models.User", "Creator")
@@ -574,17 +477,6 @@ namespace FitnessProgram.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FitnessProgram.Data.Models.PartnerPhoto", b =>
-                {
-                    b.HasOne("FitnessProgram.Data.Models.Partner", "Partner")
-                        .WithOne("Photo")
-                        .HasForeignKey("FitnessProgram.Data.Models.PartnerPhoto", "PartnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Partner");
-                });
-
             modelBuilder.Entity("FitnessProgram.Data.Models.Post", b =>
                 {
                     b.HasOne("FitnessProgram.Data.Models.User", "Creator")
@@ -596,20 +488,9 @@ namespace FitnessProgram.Data.Migrations
                     b.Navigation("Creator");
                 });
 
-            modelBuilder.Entity("FitnessProgram.Data.Models.PostPhoto", b =>
-                {
-                    b.HasOne("FitnessProgram.Data.Models.Post", "Post")
-                        .WithMany("Photos")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("FitnessProgram.Data.Models.User", b =>
                 {
-                    b.HasOne("FitnessProgram.Data.Models.ProfilePhoto", "ProfilePicture")
+                    b.HasOne("FitnessProgram.Data.Models.Image", "ProfilePicture")
                         .WithMany()
                         .HasForeignKey("ProfilePictureId");
 
@@ -678,24 +559,11 @@ namespace FitnessProgram.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FitnessProgram.Data.Models.BestResult", b =>
-                {
-                    b.Navigation("Photos");
-                });
-
-            modelBuilder.Entity("FitnessProgram.Data.Models.Partner", b =>
-                {
-                    b.Navigation("Photo")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FitnessProgram.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

@@ -38,8 +38,14 @@
                         </div>
 
                         <p class="mt-3 mb-4 pb-2 text-center">
-                            <img src="@Model.ImageUrlBefore" alt="avatar" width="300" height="250" style="border-radius: 15px; margin-right: 30px" />
-                            <img src="@Model.ImageUrlAfter" alt="avatar" width="300" height="250" style="border-radius: 15px; margin-left: 30px " />
+                            @foreach (var beforePhoto in @Model.BeforePhotos)
+                            {
+                                <img src="@String.Format("data:image/gif;base64,{0}",beforePhoto)" alt="avatar" width="50" height="50" style="border-radius: 15px;" />
+                            }
+                            @foreach (var afterPhoto in @Model.AfterPhotos)
+                            {
+                                <img src="@String.Format("data:image/gif;base64,{0}",afterPhoto)" alt="avatar" width="50" height="50" style="border-radius: 15px;" />
+                            }
                         </p>
                         <p class="mt-3 mb-4 pb-2 text-light story">
                             @Model.Story

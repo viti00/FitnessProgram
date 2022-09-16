@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -48,9 +49,6 @@ namespace FitnessProgram.Areas.Identity.Pages.Account
             [Required]
             public string UserName { get; set; }
 
-            [Url]
-            public string? ProfilePicture { get; set; }
-
             [Required]
             [StringLength(UserConstants.PasswordMaxLegth, MinimumLength = UserConstants.PasswordMinLegth)]
             [DataType(DataType.Password)]
@@ -59,6 +57,10 @@ namespace FitnessProgram.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [FromForm]
+            [NotMapped]
+            public IFormFile? File { get; set; }
         }
 
 
@@ -73,11 +75,38 @@ namespace FitnessProgram.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                ProfilePhoto profilePicture = null;
+
+                if(Input.File != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await Input.File.CopyToAsync(memoryStream);
+
+                        if (memoryStream.Length < 2097152)
+                        {
+                            var newPhoto = new ProfilePhoto()
+                            {
+                                Bytes = memoryStream.ToArray(),
+                                Description = Input.File.FileName,
+                                FileExtension = Path.GetExtension(Input.File.FileName),
+                                Size = Input.File.Length
+                            };
+
+                            profilePicture = newPhoto;
+                        }
+
+                        else
+                        {
+                            ModelState.AddModelError("File", "The file is too large.");
+                        }
+                    }
+                }
                 var user = new User
                 {
                     Email = Input.Email,
                     UserName = Input.UserName,
-                    ProfilePicture = Input.ProfilePicture == null ? "https://static.thenounproject.com/png/574704-200.png" : Input.ProfilePicture
+                    ProfilePicture = profilePicture
                 };
 
                 var result = await userManager.CreateAsync(user, Input.Password);

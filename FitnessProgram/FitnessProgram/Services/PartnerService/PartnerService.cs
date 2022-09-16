@@ -39,7 +39,7 @@
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    Image = x.Image == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.Image,
+                    Photo = Convert.ToBase64String(x.Photo.Bytes),
                     Url = x.Url,
                     PromoCode = x.PromoCode,
                     Description = x.Description,
@@ -70,7 +70,7 @@
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    Image = x.Image == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.Image,
+                    Photo = Convert.ToBase64String(x.Photo.Bytes),
                     Url = x.Url,
                     PromoCode = x.PromoCode,
                     Description = x.Description,
@@ -95,11 +95,13 @@
 
         public void AddPartner(PartnerFormModel model)
         {
+            var photo = CreatePhoto(model.File);
+
             var partner = new Partner
             {
                 Name = model.Name,
                 Description = model.Description,
-                Image = model.Image,
+                Photo = photo,
                 Url = model.Url,
                 PromoCode = model.PromoCode
             };
@@ -116,7 +118,6 @@
             {
                 Name = partner.Name,
                 Description = partner.Description,
-                Image = partner.Image,
                 Url = partner.Url,
                 PromoCode = partner.PromoCode
             };
@@ -127,10 +128,13 @@
         public void EditPartner(int partnerId, PartnerFormModel model)
         {
             var partner = GetPartnerById(partnerId);
+            partner.Photo = GetPhoto(partnerId);
+
+            var photo = CreatePhoto(model.File);
 
             partner.Name = model.Name;
             partner.Description = model.Description;
-            partner.Image = model.Image;
+            partner.Photo = photo;
             partner.Url = model.Url;
             partner.PromoCode = model.PromoCode;
 
@@ -144,5 +148,40 @@
 
         public Partner GetPartnerById(int id)
             => context.Partners.FirstOrDefault(x => x.Id == id);
+
+        private PartnerPhoto CreatePhoto(IFormFile file)
+        {
+            PartnerPhoto photo = null;
+
+            if (file != null)
+            {
+                Task.Run(async () =>
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(memoryStream);
+
+                        if (memoryStream.Length < 2097152)
+                        {
+                            var newPhoto = new PartnerPhoto()
+                            {
+                                Bytes = memoryStream.ToArray(),
+                                Description = file.FileName,
+                                FileExtension = Path.GetExtension(file.FileName),
+                                Size = file.Length,
+                            };
+                            photo = newPhoto;
+                        }
+
+                    }
+                }).GetAwaiter()
+               .GetResult();
+            }
+
+            return photo;
+        }
+
+        private PartnerPhoto GetPhoto(int partnerId)
+            => context.PartnerPhotos.FirstOrDefault(x => x.PartnerId == partnerId);
     }
 }

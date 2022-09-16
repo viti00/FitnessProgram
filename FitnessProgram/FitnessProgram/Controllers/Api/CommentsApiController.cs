@@ -16,7 +16,7 @@
             => this.commentService = commentService;
 
         [Route("{id}")]
-        public CommentViewModel GetComments(string id)
+        public CommentViewModel GetComment(string id)
         {
             var comment = commentService.GetNewComment(id);
 

@@ -42,6 +42,7 @@
         [Authorize]
         public IActionResult Create(PostFormModel post)
         {
+            
             if (!this.ModelState.IsValid)
             {
                 return View(post);

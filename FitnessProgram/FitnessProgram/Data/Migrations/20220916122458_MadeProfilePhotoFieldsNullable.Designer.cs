@@ -4,6 +4,7 @@ using FitnessProgram.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessProgram.Data.Migrations
 {
     [DbContext(typeof(FitnessProgramDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220916122458_MadeProfilePhotoFieldsNullable")]
+    partial class MadeProfilePhotoFieldsNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,6 +35,14 @@ namespace FitnessProgram.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ImageUrlAfter")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrlBefore")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Story")
                         .IsRequired()
                         .HasMaxLength(10000)
@@ -51,7 +61,7 @@ namespace FitnessProgram.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("BestResultId")
+                    b.Property<int>("BestResultId")
                         .HasColumnType("int");
 
                     b.Property<byte[]>("Bytes")
@@ -169,6 +179,10 @@ namespace FitnessProgram.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -216,8 +230,7 @@ namespace FitnessProgram.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartnerId")
-                        .IsUnique();
+                    b.HasIndex("PartnerId");
 
                     b.ToTable("PartnerPhotos");
                 });
@@ -308,7 +321,12 @@ namespace FitnessProgram.Data.Migrations
                     b.Property<double>("Size")
                         .HasColumnType("float");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProfilePhotos");
                 });
@@ -538,8 +556,10 @@ namespace FitnessProgram.Data.Migrations
             modelBuilder.Entity("FitnessProgram.Data.Models.BestResultPhoto", b =>
                 {
                     b.HasOne("FitnessProgram.Data.Models.BestResult", "BestResult")
-                        .WithMany("Photos")
-                        .HasForeignKey("BestResultId");
+                        .WithMany()
+                        .HasForeignKey("BestResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BestResult");
                 });
@@ -577,8 +597,8 @@ namespace FitnessProgram.Data.Migrations
             modelBuilder.Entity("FitnessProgram.Data.Models.PartnerPhoto", b =>
                 {
                     b.HasOne("FitnessProgram.Data.Models.Partner", "Partner")
-                        .WithOne("Photo")
-                        .HasForeignKey("FitnessProgram.Data.Models.PartnerPhoto", "PartnerId")
+                        .WithMany()
+                        .HasForeignKey("PartnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -605,6 +625,15 @@ namespace FitnessProgram.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("FitnessProgram.Data.Models.ProfilePhoto", b =>
+                {
+                    b.HasOne("FitnessProgram.Data.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FitnessProgram.Data.Models.User", b =>
@@ -675,17 +704,6 @@ namespace FitnessProgram.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("FitnessProgram.Data.Models.BestResult", b =>
-                {
-                    b.Navigation("Photos");
-                });
-
-            modelBuilder.Entity("FitnessProgram.Data.Models.Partner", b =>
-                {
-                    b.Navigation("Photo")
                         .IsRequired();
                 });
 

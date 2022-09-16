@@ -30,42 +30,44 @@
                     <span class="small">Be the first who posting</span>
                 </div>
             }
-            <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-10 offset-xl-1 elements-container">
-                <div class="btn-container float-left">
-                    <a class="btn custom left @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+            else
+            {
+                <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-10 offset-xl-1 elements-container">
+                    <div class="btn-container float-left">
+                        <a class="btn custom left @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
                        asp-controller="BestResults"
                        asp-action="All"
                        asp-route-currentPage="@previousPage">&lt&lt&lt</a>
-                </div>
-                <div class="d-flex flex-wrap justify-content-center align-items-center">
-                    @foreach (var post in Model.BestResults)
-                    {
-                        <a title="Show More" asp-area="" asp-controller="BestResults" asp-action="Details" asp-route-id="@post.Id" class="a-card">
-                            <div class="card">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <img class="card-img-top" src="@post.ImageUrlBefore" alt="Image" />
-                                    <img class="card-img-top" src="@post.ImageUrlAfter" alt="Image" />
-                                </div>
-                                <div class="card-body">
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-center align-items-center">
+                        @foreach (var post in Model.BestResults)
+                        {
+                            <a title="Show More" asp-area="" asp-controller="BestResults" asp-action="Details" asp-route-id="@post.Id" class="a-card">
+                                <div class="card">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <p>@post.Story.Substring(0, post.Story.Length > 30? 30 : post.Story.Length)...</p>
+                                        <img class="card-img-top" src="@String.Format("data:image/gif;base64,{0}",post.BeforePhotos[0])" alt="Image" />
+                                        <img class="card-img-top" src="@String.Format("data:image/gif;base64,{0}", post.AfterPhotos[0])" alt="Image" />
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p>@post.Story.Substring(0, post.Story.Length > 30? 30 : post.Story.Length)...</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
-                    }
-                </div>
-                <div class="btn-container float-right">
-                    <a class="btn custom right @(Model.CurrentPage == Model.MaxPage ? "disabled" : string.Empty)"
+                            </a>
+                        }
+                    </div>
+                    <div class="btn-container float-right">
+                        <a class="btn custom right @(Model.CurrentPage == Model.MaxPage ? "disabled" : string.Empty)"
                        asp-controller="BestResults"
                        asp-action="All"
                        asp-route-currentPage="@(Model.CurrentPage + 1)">&gt&gt&gt</a>
+                    </div>
+                    <div class="page-number-container">
+                        <p class="text-light">Page @Model.CurrentPage from @Model.MaxPage</p>
+                    </div>
                 </div>
-                <div class="page-number-container">
-                    <p class="text-light">Page @Model.CurrentPage from @Model.MaxPage</p>
-                </div>
-            </div>
-
+            }
         </div>
     </div>
 </div>

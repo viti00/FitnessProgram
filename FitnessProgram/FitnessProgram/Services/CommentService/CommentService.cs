@@ -75,7 +75,7 @@
                     Id= x.Id,
                     Message = x.Message,
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
-                    UserProfilePictire = x.Creator.ProfilePicture,
+                    UserProfilePictire = x.Creator.ProfilePicture != null ? Convert.ToBase64String(x.Creator.ProfilePicture.Bytes) : AnonymousImageConstant.AnonymousImage,
                     UserUsername = x.Creator.UserName,
                     UserId = x.CreatorId
                 }).First();

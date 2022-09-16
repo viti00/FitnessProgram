@@ -1,17 +1,19 @@
 ﻿namespace FitnessProgram.Areas.Admin.Models.BestResult
 {
+    using Microsoft.AspNetCore.Mvc;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using static FitnessProgram.Data.DataConstants;
 
     public class BestResultFormModel
     {
-        [Required]
-        [Url]
-        public string ImageUrlBefore { get; init; }
+        [FromForm]
+        [NotMapped]
+        public IFormFileCollection BeforeFiles { get; set; }
 
-        [Required]
-        [Url]
-        public string ImageUrlAfter { get; init; }
+        [FromForm]
+        [NotMapped]
+        public IFormFileCollection AfterFiles { get; set; }
 
         [Required]
         [StringLength(BestResultConstants.StoryMaxLegth, MinimumLength = BestResultConstants.StoryMinLegth)]

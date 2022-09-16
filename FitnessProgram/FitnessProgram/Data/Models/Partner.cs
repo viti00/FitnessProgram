@@ -17,7 +17,7 @@
         public string Description { get; set; }
 
         [Required]
-        public string Image { get; set; }
+        public PartnerPhoto Photo { get; set; }
 
         [Required]
         public string Url { get; set; }

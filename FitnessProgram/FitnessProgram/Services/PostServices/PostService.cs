@@ -28,16 +28,17 @@
         }
         public void Create(PostFormModel model, string creatorId)
         {
+            var photos = CreatePhotos(model.Files);
 
             var post = new Post
             {
                 Title = model.Title,
-                ImageUrl = model.ImageUrl == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : model.ImageUrl,
+                Photos = photos,
                 Text = model.Text,
                 CreatedOn = DateTime.Now,
                 Likes = new List<UserLikedPost>(),
                 Comments = new List<Comment>(),
-                CreatorId = creatorId
+                CreatorId = creatorId,
             };
 
             context.Posts.Add(post);
@@ -52,7 +53,7 @@
             currPage = GetCurrPage(currPage, maxPage);
 
             var myPosts = context.Posts
-                .OrderByDescending(x=> x.CreatedOn)
+                .OrderByDescending(x => x.CreatedOn)
                 .Where(x => x.CreatorId == userId)
                 .Skip((currPage - 1) * postPerPage)
                 .Take(postPerPage)
@@ -60,7 +61,7 @@
                 {
                     PostId = x.Id,
                     Title = x.Title,
-                    ImageUrl = x.ImageUrl == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.ImageUrl,
+                    Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
                     LikesCount = x.Likes.Count(),
                     CommentsCount = x.Comments.Count(),
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
@@ -99,7 +100,7 @@
                 {
                     PostId = x.Id,
                     Title = x.Title,
-                    ImageUrl = x.ImageUrl == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.ImageUrl,
+                    Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
                     LikesCount = x.Likes.Count(),
                     CommentsCount = x.Comments.Count(),
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
@@ -110,15 +111,15 @@
             else
             {
                 postsAll = cache.Get<List<Post>>(postsCache);
-                if(postsAll == null)
+                if (postsAll == null)
                 {
                     postsAll = context.Posts
                     .OrderByDescending(x => x.CreatedOn)
-                    .Select(x=> new Post
+                    .Select(x => new Post
                     {
                         Id = x.Id,
                         Title = x.Title,
-                        ImageUrl = x.ImageUrl,
+                        Photos = x.Photos,
                         Text = x.Text,
                         CreatedOn = x.CreatedOn,
                         Likes = x.Likes,
@@ -143,7 +144,7 @@
                     {
                         PostId = x.Id,
                         Title = x.Title,
-                        ImageUrl = x.ImageUrl == null ? "https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png" : x.ImageUrl,
+                        Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
                         LikesCount = x.Likes.Count(),
                         CommentsCount = x.Comments.Count(),
                         CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
@@ -166,7 +167,7 @@
 
         public PostDetailsModel GetPostDetails(string postId, string userId)
         {
-            var alreadyLiked = context.userLikedPosts.Any(x => x.PostId == postId && x.UserId == userId);
+            var alreadyLiked = context.UserLikedPosts.Any(x => x.PostId == postId && x.UserId == userId);
 
             var post = context.Posts
                 .Where(x => x.Id == postId)
@@ -174,19 +175,19 @@
                 {
                     Id = x.Id,
                     Title = x.Title,
-                    ImageUrl = x.ImageUrl,
+                    Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
                     Text = x.Text,
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                     LikesCount = x.Likes.Count(),
                     IsCurrUserLikedPost = alreadyLiked,
                     Comments = x.Comments
                                 .OrderByDescending(x => x.CreatedOn)
-                                .Select(x=> new CommentViewModel
+                                .Select(x => new CommentViewModel
                                 {
                                     Id = x.Id,
                                     Message = x.Message,
                                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
-                                    UserProfilePictire = x.Creator.ProfilePicture,
+                                    UserProfilePictire = x.Creator.ProfilePicture != null ? Convert.ToBase64String(x.Creator.ProfilePicture.Bytes) : AnonymousImageConstant.AnonymousImage,
                                     UserUsername = x.Creator.UserName,
                                     UserId = x.CreatorId
                                 })
@@ -194,7 +195,7 @@
                     Creator = new UserViewModel
                     {
                         Id = x.CreatorId,
-                        ProfilePicture = x.Creator.ProfilePicture,
+                        ProfilePicture = x.Creator.ProfilePicture != null ? Convert.ToBase64String(x.Creator.ProfilePicture.Bytes) : AnonymousImageConstant.AnonymousImage,
                         Username = x.Creator.UserName,
                     }
                 }).FirstOrDefault();
@@ -207,7 +208,6 @@
             var model = new PostFormModel
             {
                 Title = post.Title,
-                ImageUrl = post.ImageUrl,
                 Text = post.Text
             };
 
@@ -217,10 +217,13 @@
         public void Edit(PostFormModel model, string postId)
         {
             var post = GetPostById(postId);
+            post.Photos = GetPhotos(postId); // this method get old photos
+
+            var photos = CreatePhotos(model.Files);
 
             post.Title = model.Title;
-            post.ImageUrl = model.ImageUrl;
             post.Text = model.Text;
+            post.Photos = photos;
 
             context.SaveChanges();
         }
@@ -233,7 +236,7 @@
 
             var likes = likeService.GetAllLikesForPost(post.Id);
 
-            context.userLikedPosts.RemoveRange(likes);
+            context.UserLikedPosts.RemoveRange(likes);
 
             context.Posts.Remove(post);
             context.SaveChanges();
@@ -241,5 +244,42 @@
 
         public Post GetPostById(string postId)
             => context.Posts.FirstOrDefault(x => x.Id == postId);
+           
+
+        private List<PostPhoto> CreatePhotos(IFormFileCollection files)
+        {
+            List<PostPhoto> photos = new List<PostPhoto>();
+            Task.Run(async () =>
+            {
+                if (files != null)
+                {
+                    foreach (var file in files)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await file.CopyToAsync(memoryStream);
+
+                            if (memoryStream.Length < 2097152)
+                            {
+                                var newphoto = new PostPhoto()
+                                {
+                                    Bytes = memoryStream.ToArray(),
+                                    Description = file.FileName,
+                                    FileExtension = Path.GetExtension(file.FileName),
+                                    Size = file.Length,
+                                };
+                                photos.Add(newphoto);
+                            }
+                        }
+                    }
+                }
+            }).GetAwaiter()
+               .GetResult();
+
+            return photos;
+        }
+
+        private List<PostPhoto> GetPhotos(string postId)
+            => context.PostPhotos.Where(x => x.PostId == postId).ToList();
     }
 }

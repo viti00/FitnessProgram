@@ -10,7 +10,7 @@ namespace FitnessProgram.Models.Post
 
         public string Title { get; init; }
 
-        public string? ImageUrl { get; init; }
+        public List<string> Photos { get; init; }
 
         public string Text { get; init; }
 

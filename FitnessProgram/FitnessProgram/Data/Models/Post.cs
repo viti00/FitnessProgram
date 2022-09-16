@@ -1,5 +1,6 @@
 ﻿namespace FitnessProgram.Data.Models
 {
+    using Microsoft.AspNetCore.Mvc;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using static FitnessProgram.Data.DataConstants;
@@ -13,7 +14,7 @@
         [MaxLength(PostConstants.TitleMaxLength)]
         public string Title { get; set; }
 
-        public string? ImageUrl { get; set; }
+        public virtual ICollection<PostPhoto> Photos { get; set; } = new HashSet<PostPhoto>();
 
         [Required]
         [MaxLength(PostConstants.TextMaxLegth)]
@@ -22,7 +23,7 @@
         [Required]
         public DateTime CreatedOn { get; set; }
 
-        public List<UserLikedPost> Likes { get; set; }
+        public virtual ICollection<UserLikedPost> Likes { get; set; } = new HashSet<UserLikedPost>();
 
         public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
 

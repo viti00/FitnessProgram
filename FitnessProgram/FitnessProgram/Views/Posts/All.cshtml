@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/css/PostsPartnersBestResultsShared.css" />
 }
 
-@{
+    @{
     var isSignIn = SignInManager.IsSignedIn(User);
 }
 
@@ -42,10 +42,12 @@
                     }
                 </div>
             }
-            <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-10 offset-xl-1 elements-container">
-                <partial name="_PostsContainerPartial" model="Model"/>
-            </div>
-
+            else
+            {
+                <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-10 offset-xl-1 elements-container">
+                    <partial name="_PostsContainerPartial" model="Model" />
+                </div>
+            }
         </div>
     </div>
 </div>

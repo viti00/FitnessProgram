@@ -12,12 +12,12 @@
         => this.context = context;
 
         public List<UserLikedPost> GetAllLikesForPost(string postId)
-            => context.userLikedPosts.Where(x => x.PostId == postId).ToList();
+            => context.UserLikedPosts.Where(x => x.PostId == postId).ToList();
 
 
         public UserLikedPost GetLike(string postId, string userId)
         {
-            var like = context.userLikedPosts.FirstOrDefault(x => x.PostId == postId && x.UserId == userId);
+            var like = context.UserLikedPosts.FirstOrDefault(x => x.PostId == postId && x.UserId == userId);
 
             return like;
         }
@@ -40,17 +40,17 @@
                 PostId = postId,
             };
 
-            context.userLikedPosts.Add(like);
+            context.UserLikedPosts.Add(like);
             context.SaveChanges();
         }
 
         public void UnlikePost(string postId, string userId)
         {
-            var like = context.userLikedPosts
+            var like = context.UserLikedPosts
                 .Where(x => x.PostId == postId && x.UserId == userId)
                 .FirstOrDefault();
 
-            context.userLikedPosts.Remove(like);
+            context.UserLikedPosts.Remove(like);
             context.SaveChanges();
         }
     }

@@ -8,7 +8,7 @@
 
         public string Description { get; init; }
 
-        public string Image { get; init; }
+        public string Photo { get; init; }
 
         public string Url { get; init; }
 
