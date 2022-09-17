@@ -1,7 +1,7 @@
 ﻿namespace FitnessProgram.Controllers
 {
     using FitnessProgram.Infrastructure;
-    using FitnessProgram.Models.Post;
+    using FitnessProgram.ViewModels.Post;
     using FitnessProgram.Services.PostServices;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -50,7 +50,7 @@
             var userId = User.GetId();
 
             postService.Create(post, userId);
-            return RedirectToAction("All", "Posts");
+            return RedirectToAction("MyPosts", "Posts");
         }
 
         [Authorize]

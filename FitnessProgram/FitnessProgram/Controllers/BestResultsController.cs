@@ -1,7 +1,7 @@
 ﻿namespace FitnessProgram.Controllers
 {
     using FitnessProgram.Infrastructure;
-    using FitnessProgram.Models.BestResult;
+    using FitnessProgram.ViewModels.BestResult;
     using FitnessProgram.Services.BestResultService;
     using Microsoft.AspNetCore.Mvc;
 

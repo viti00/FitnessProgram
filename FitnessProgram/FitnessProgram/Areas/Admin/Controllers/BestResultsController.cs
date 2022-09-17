@@ -1,6 +1,6 @@
 ﻿namespace FitnessProgram.Areas.Admin.Controllers
 {
-    using FitnessProgram.Areas.Admin.Models.BestResult;
+    using FitnessProgram.ViewModels.BestResult;
     using FitnessProgram.Infrastructure;
     using FitnessProgram.Services.BestResultService;
     using Microsoft.AspNetCore.Authorization;

@@ -1,6 +1,4 @@
 ﻿using FitnessProgram.Models;
-using FitnessProgram.Models.Post;
-using FitnessProgram.Services.PostServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

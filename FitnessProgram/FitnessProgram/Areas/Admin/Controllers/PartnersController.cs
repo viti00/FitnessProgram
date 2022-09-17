@@ -1,6 +1,6 @@
 ﻿namespace FitnessProgram.Areas.Admin.Controllers
 {
-    using FitnessProgram.Areas.Admin.Models.Partners;
+    using FitnessProgram.ViewModels.Partner;
     using FitnessProgram.Infrastructure;
     using FitnessProgram.Services.PartnerService;
     using Microsoft.AspNetCore.Authorization;

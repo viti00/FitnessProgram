@@ -22,4 +22,10 @@
     <Folder Include="wwwroot\lib\videos\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FitnessProgram.Global\FitnessProgram.Global.csproj" />
+    <ProjectReference Include="..\FitnessProgram.Services\FitnessProgram.Services.csproj" />
+    <ProjectReference Include="..\FitnessProgram.ViewModels\FitnessProgram.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

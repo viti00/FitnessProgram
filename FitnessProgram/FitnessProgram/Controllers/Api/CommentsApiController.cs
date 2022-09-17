@@ -1,7 +1,6 @@
 ﻿namespace FitnessProgram.Controllers.Api
 {
-    using FitnessProgram.Data.Models;
-    using FitnessProgram.Models.Comment;
+    using FitnessProgram.ViewModels.Comment;
     using FitnessProgram.Services.CommentService;
     using Microsoft.AspNetCore.Mvc;
 

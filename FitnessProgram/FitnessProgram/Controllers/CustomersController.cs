@@ -1,6 +1,6 @@
 ﻿namespace FitnessProgram.Controllers
 {
-    using FitnessProgram.Models.Customer;
+    using FitnessProgram.ViewModels.Customer;
     using FitnessProgram.Services.CustomerService;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;

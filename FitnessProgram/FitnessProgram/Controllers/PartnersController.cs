@@ -1,9 +1,8 @@
 ﻿namespace FitnessProgram.Controllers
 {
     using FitnessProgram.Infrastructure;
-    using FitnessProgram.Models.Partners;
+    using FitnessProgram.ViewModels.Partner;
     using FitnessProgram.Services.PartnerService;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     public class PartnersController : Controller
     {
