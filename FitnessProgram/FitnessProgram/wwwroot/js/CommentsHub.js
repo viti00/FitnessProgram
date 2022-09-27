@@ -15,7 +15,7 @@ commentsConnection.on("Comment", function (divParent, count) {
 
 commentsConnection.on("Edit", function (message, commentId) {
     document.querySelector(`[comment-message-id="${commentId}"]`).textContent = message;
-    $('span').attr("hidden", true);
+    $('#validator').attr("hidden", true);
     Cancel();
 });
 

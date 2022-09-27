@@ -110,8 +110,7 @@
             var model = new BestResultDetailsModel
             {
                 Id = bestResult.Id,
-                BeforePhotos = bestResult.Photos.Where(x=> x.PhotoType == typeBefore).Select(x=> Convert.ToBase64String(x.Bytes)).ToList(),
-                AfterPhotos = bestResult.Photos.Where(x => x.PhotoType == typeAfter).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
+                Photos = bestResult.Photos.Select(x=> Convert.ToBase64String(x.Bytes)).ToList(),
                 CreatedOn = bestResult.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
                 Story = bestResult.Story
             };

@@ -11,7 +11,7 @@
 function Comment() {
     var message = $('textarea').val();
     if (message.trim().length >= 2) {
-        $('span').attr("hidden", true);
+        $('#validator').attr("hidden", true);
         $.get(`/comments/comment/${id}?message=${message}`, (status) => {
             $('textarea').val('');
             $.get(`/api/comments/${id}`, (comment) => {
@@ -34,7 +34,7 @@ function Comment() {
         });
     }
     else {
-        $('span').removeAttr("hidden");
+        $('#validator').removeAttr("hidden");
     }
 }
 
@@ -49,7 +49,7 @@ function Edit() {
         })
     }
     else {
-        $('span').removeAttr("hidden");
+        $('#validator').removeAttr("hidden");
     }
 }
 
