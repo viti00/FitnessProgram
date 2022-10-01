@@ -50,7 +50,7 @@
         {
             int totalPosts = context.Posts.Where(x => x.CreatorId == userId).Count();
 
-            int maxPage = CalcMaxPage(totalPosts, currPage);
+            int maxPage = CalcMaxPage(totalPosts, postPerPage);
             currPage = GetCurrPage(currPage, maxPage);
 
             var myPosts = context.Posts
