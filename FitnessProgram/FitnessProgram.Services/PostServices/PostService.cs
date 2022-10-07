@@ -9,6 +9,8 @@
     using Microsoft.Extensions.Caching.Memory;
     using static SharedMethods;
     using Microsoft.AspNetCore.Http;
+    using System.Globalization;
+    using Microsoft.EntityFrameworkCore;
 
     public class PostService : IPostService
     {
@@ -65,7 +67,7 @@
                     Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
                     LikesCount = x.Likes.Count(),
                     CommentsCount = x.Comments.Count(),
-                    CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
+                    CreatedOn = x.CreatedOn,
 
                 })
                 .ToList();
@@ -79,7 +81,7 @@
             return result;
         }
 
-        public AllPostsQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator)
+        public AllPostsQueryModel GetAll(int currPage, int postPerPage, AllPostsQueryModel query, bool isAdministrator)
         {
             int totalPosts;
 
@@ -89,25 +91,13 @@
 
             List<PostViewModel> currPagePosts;
 
+
             if (isAdministrator)
             {
-                totalPosts = context.Posts.Count();
-
-                currPagePosts = context.Posts
-                .OrderByDescending(x => x.CreatedOn)
-                .Skip((currPage - 1) * postPerPage)
-                .Take(postPerPage)
-                .Select(x => new PostViewModel
-                {
-                    PostId = x.Id,
-                    Title = x.Title,
-                    Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
-                    LikesCount = x.Likes.Count(),
-                    CommentsCount = x.Comments.Count(),
-                    CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
-
-                })
-                .ToList();
+                postsAll = context.Posts
+                    .Include(l => l.Likes)
+                    .Include(c => c.Comments)
+                    .ToList();
             }
             else
             {
@@ -115,42 +105,52 @@
                 if (postsAll == null)
                 {
                     postsAll = context.Posts
-                    .OrderByDescending(x => x.CreatedOn)
-                    .Select(x => new Post
-                    {
-                        Id = x.Id,
-                        Title = x.Title,
-                        Photos = x.Photos,
-                        Text = x.Text,
-                        CreatedOn = x.CreatedOn,
-                        Likes = x.Likes,
-                        Comments = x.Comments,
-                        CreatorId = x.CreatorId
-                    })
-                    .ToList();
+                        .Include(l => l.Likes)
+                        .Include(c => c.Comments)
+                        .ToList();
 
                     var cacheOptions = new MemoryCacheEntryOptions()
                         .SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
 
                     cache.Set(postsCache, postsAll, cacheOptions);
                 }
-
-                totalPosts = postsAll.Count();
-
-                currPagePosts =
-                    postsAll
-                    .Skip((currPage - 1) * postPerPage)
-                    .Take(postPerPage)
-                    .Select(x => new PostViewModel
-                    {
-                        PostId = x.Id,
-                        Title = x.Title,
-                        Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
-                        LikesCount = x.Likes.Count(),
-                        CommentsCount = x.Comments.Count(),
-                        CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm"),
-                    }).ToList();
             }
+
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            {
+                postsAll = postsAll
+                    .Where(p => p.Title.Contains(query.SearchTerm, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            postsAll = query.Sorting switch
+            {
+                Sorting.Default => postsAll.OrderByDescending(x => x.CreatedOn).ToList(),
+                Sorting.LikesAscending => postsAll.OrderBy(x => x.Likes.Count()).ToList(),
+                Sorting.LikesDescending => postsAll.OrderByDescending(x => x.Likes.Count()).ToList(),
+                Sorting.CommentsAscending => postsAll.OrderBy(x => x.Comments.Count()).ToList(),
+                Sorting.CommentsDescending => postsAll.OrderByDescending(x => x.Comments.Count()).ToList(),
+                Sorting.DateAscending => postsAll.OrderBy(x => x.CreatedOn).ToList(),
+                _=> postsAll.OrderByDescending(x => x.CreatedOn).ToList()
+            };
+
+            totalPosts = postsAll.Count();
+
+            currPagePosts = postsAll
+            .Skip((query.CurrentPage - 1) * postPerPage)
+            .Take(postPerPage).ToList()
+            .Select(x => new PostViewModel
+            {
+                PostId = x.Id,
+                Title = x.Title,
+                Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
+                LikesCount = x.Likes.Count(),
+                CommentsCount = x.Comments.Count(),
+                CreatedOn = x.CreatedOn,
+
+            })
+           .ToList();
+
 
             var maxPage = CalcMaxPage(totalPosts, postPerPage);
 
@@ -160,7 +160,9 @@
             {
                 Posts = currPagePosts,
                 CurrentPage = currPage,
-                MaxPage = maxPage
+                MaxPage = maxPage,
+                SearchTerm = query.SearchTerm,
+                Sorting = query.Sorting
             };
 
             return result;
@@ -246,7 +248,7 @@
         public Post GetPostById(string postId)
             => context.Posts
             .FirstOrDefault(x => x.Id == postId);
-           
+
 
         private List<PostPhoto> CreatePhotos(IFormFileCollection files)
         {

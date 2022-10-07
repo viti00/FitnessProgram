@@ -19,7 +19,7 @@
         {
             var isAdministator = User.IsAdministrator();
 
-            var currPagePosts = postService.GetAll(query.CurrentPage, AllPostsQueryModel.PostPerPage, isAdministator);
+            var currPagePosts = postService.GetAll(query.CurrentPage, AllPostsQueryModel.PostPerPage,query, isAdministator);
 
             return View(currPagePosts);
         }

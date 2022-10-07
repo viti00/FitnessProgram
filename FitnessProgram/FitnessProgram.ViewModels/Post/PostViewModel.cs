@@ -8,7 +8,7 @@
 
         public List<string> Photos { get; init; }
 
-        public string CreatedOn { get; init; }
+        public DateTime CreatedOn { get; init; }
 
         public int LikesCount { get; init; }
 

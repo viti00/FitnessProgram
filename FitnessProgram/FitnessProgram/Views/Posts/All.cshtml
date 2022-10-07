@@ -18,36 +18,70 @@
 }
 
 <div class="body-section">
+
     <div class="color-overlay"></div>
+
     <div class="elements">
+        <div class="search-container">
+            <form>
+                <div class="row justify-content-center">
+                    <div class="col-25">
+                        <label asp-for="SearchTerm" class="text-light">Title</label>
+                    </div>
+                    <div class="col-75">
+                        <input asp-for="SearchTerm" type="text" placeholder="Search by title...">
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-25">
+                        <label asp-for="Sorting" class="text-light">Sort By</label>
+                    </div>
+                    <div class="col-75">
+                        <select asp-for="Sorting">
+                            <option value="0" selected>None</option>
+                            <option value="1">Likes count ascending</option>
+                            <option value="2">Likes count descending</option>
+                            <option value="3">Comments count ascending</option>
+                            <option value="4">Comments count descending</option>
+                            <option value="5">Date ascending</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <input type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
         @if (isSignIn && !User.IsAdministrator())
         {
             <div class="btn-create-container">
                 <a asp-controller="Posts" asp-action="Create" class="btn create-btn">Create Post</a>
             </div>
         }
-        <div class="row">
-            @if (Model.Posts.Count() == 0)
-            {
+        <div class="row res-container">
+            <div class="row post-cards">
+                @if (Model.Posts.Count() == 0)
+                {
 
-                <div class="no-post-container">
-                    <h2>There is no post created</h2>
-                    @if (isSignIn)
-                    {
-                        <span>Be the first who posting</span>
-                    }
-                    else
-                    {
-                        <span>You must be logged in to post</span>
-                    }
-                </div>
-            }
-            else
-            {
-                <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-10 offset-xl-1 elements-container">
-                    <partial name="_PostsContainerPartial" model="Model" />
-                </div>
-            }
+                    <div class="no-post-container">
+                        <h2>There is no post created</h2>
+                        @if (isSignIn)
+                        {
+                            <span>Be the first tо posting</span>
+                        }
+                        else
+                        {
+                            <span>You must be logged in to post</span>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-12 col-md-12 col-lg-10 offset-lg-1 col-xl-10 offset-xl-1 elements-container">
+                        <partial name="_PostsContainerPartial" model="Model" />
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
