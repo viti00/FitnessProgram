@@ -17,7 +17,7 @@
         {
             var isAdministrator = User.IsAdministrator();
 
-            var allPosts = partnerService.GetAll(query.CurrentPage, AllPartnersQueryModel.PostPerPage, isAdministrator);
+            var allPosts = partnerService.GetAll(query.CurrentPage, AllPartnersQueryModel.PostPerPage, query, isAdministrator);
 
             return View(allPosts);
         }

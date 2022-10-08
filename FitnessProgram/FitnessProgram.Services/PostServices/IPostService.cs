@@ -7,7 +7,7 @@
     {
         public AllPostsQueryModel GetAll(int currPage,int postPerPage, AllPostsQueryModel query, bool isAdministrator);
 
-        public AllPostsQueryModel GetMy(string userId, int currPage, int postPerPage);
+        public AllPostsQueryModel GetMy(string userId, int currPage, int postPerPage, AllPostsQueryModel query);
 
         public void Create(PostFormModel model, string userId);
 

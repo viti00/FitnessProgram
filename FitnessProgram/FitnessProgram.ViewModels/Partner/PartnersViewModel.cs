@@ -13,5 +13,7 @@
         public string Url { get; init; }
 
         public string PromoCode { get; init; }
+
+        public DateTime CreatedOn { get; init; }
     }
 }

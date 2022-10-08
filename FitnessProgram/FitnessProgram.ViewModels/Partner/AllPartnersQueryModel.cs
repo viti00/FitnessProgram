@@ -11,5 +11,9 @@
         public int CurrentPage { get; init; } = initialCurrPage;
 
         public int MaxPage { get; init; }
+
+        public string SearchTerm { get; init; }
+
+        public Sorting Sorting { get; init; }
     }
 }

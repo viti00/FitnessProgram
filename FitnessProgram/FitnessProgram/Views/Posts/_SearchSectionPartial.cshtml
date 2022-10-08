@@ -1,0 +1,33 @@
+﻿@model AllPostsQueryModel
+
+<div class="search-container">
+            <form>
+                <div class="row justify-content-center">
+                    <div class="col-25">
+                        <label asp-for="SearchTerm" class="text-light">Search By:</label>
+                    </div>
+                    <div class="col-75">
+                        <input asp-for="SearchTerm" type="text" placeholder="Title...">
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-25">
+                        <label asp-for="Sorting" class="text-light">Sort By:</label>
+                    </div>
+                    <div class="col-75">
+                        <select asp-for="Sorting">
+                            <option value="0" selected>None</option>
+                            <option value="1">Likes count ascending</option>
+                            <option value="2">Likes count descending</option>
+                            <option value="3">Comments count ascending</option>
+                            <option value="4">Comments count descending</option>
+                            <option value="5">Date ascending</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <input type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+

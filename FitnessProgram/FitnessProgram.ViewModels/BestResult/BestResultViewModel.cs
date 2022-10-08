@@ -9,5 +9,7 @@
         public List<string> AfterPhotos { get; init; }
 
         public string Story { get; init; }
+
+        public DateTime CreatedOn { get; init; }
     }
 }

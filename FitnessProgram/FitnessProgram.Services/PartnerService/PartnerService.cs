@@ -4,6 +4,7 @@
     using FitnessProgram.Data.Models;
     using FitnessProgram.ViewModels.Partner;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Caching.Memory;
     using static SharedMethods;
 
@@ -18,7 +19,7 @@
             this.cache = cache;
         }
 
-        public AllPartnersQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator)
+        public AllPartnersQueryModel GetAll(int currPage, int postPerPage, AllPartnersQueryModel query,bool isAdministrator)
         {
             const string partnersCache = "PartnersCache";
 
@@ -30,64 +31,55 @@
 
             if (isAdministrator)
             {
-                totalPosts = context.Partners.Count();
-
-                currPagePartners = context.Partners
-                .Skip((currPage - 1) * postPerPage)
-                .Take(postPerPage)
-                .Select(x => new PartnersViewModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Photo = Convert.ToBase64String(x.Photo.Bytes),
-                    Url = x.Url,
-                    PromoCode = x.PromoCode,
-                    Description = x.Description,
-
-                })
-                .ToList();
+                partners = GetPartners();
             }
             else
             {
                 partners = cache.Get<List<Partner>>(partnersCache);
                 if (partners == null)
                 {
-                    partners = context.Partners
-                    .Select(x=> new Partner
-                    {
-                        Id= x.Id,
-                        Photo = x.Photo,
-                        Name = x.Name,
-                        Description = x.Description,
-                        PromoCode = x.PromoCode,
-                        Url = x.Url
-                    })
-                    .ToList();
+                    partners = GetPartners();
 
                     var cacheOptions = new MemoryCacheEntryOptions()
-                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
+                        .SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
 
                     cache.Set(partnersCache, partners, cacheOptions);
                 }
-
-                totalPosts = partners.Count();
-
-                currPagePartners = partners
-                .Skip((currPage - 1) * postPerPage)
-                .Take(postPerPage)
-                .Select(x => new PartnersViewModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Photo = Convert.ToBase64String(x.Photo.Bytes),
-                    Url = x.Url,
-                    PromoCode = x.PromoCode,
-                    Description = x.Description,
-
-                })
-                .ToList();
-
             }
+
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            {
+                partners = partners
+                    .Where(p => p.Name.Contains(query.SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           p.Description.Contains(query.SearchTerm, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            partners = query.Sorting switch
+            {
+                Sorting.Default => partners.OrderByDescending(x => x.CreatedOn).ToList(),
+                Sorting.DateAscending => partners.OrderBy(x => x.CreatedOn).ToList(),
+                _ => partners.OrderByDescending(x => x.CreatedOn).ToList()
+            };
+
+            totalPosts = partners.Count();
+
+            currPagePartners = partners
+            .Skip((query.CurrentPage - 1) * postPerPage)
+            .Take(postPerPage).ToList()
+            .Select(x => new PartnersViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Photo = Convert.ToBase64String(x.Photo.Bytes),
+                Url = x.Url,
+                PromoCode = x.PromoCode,
+                Description = x.Description,
+                CreatedOn = x.CreatedOn,
+            })
+           .ToList();
+
+
             var maxPage = CalcMaxPage(totalPosts, postPerPage);
 
             currPage = GetCurrPage(currPage, maxPage);
@@ -96,7 +88,9 @@
             {
                 Partners = currPagePartners,
                 CurrentPage = currPage,
-                MaxPage = maxPage
+                MaxPage = maxPage,
+                SearchTerm = query.SearchTerm,
+                Sorting = query.Sorting
             };
 
             return result;
@@ -112,7 +106,8 @@
                 Description = model.Description,
                 Photo = photo,
                 Url = model.Url,
-                PromoCode = model.PromoCode
+                PromoCode = model.PromoCode,
+                CreatedOn = DateTime.Now
             };
 
             context.Partners.Add(partner);
@@ -137,7 +132,6 @@
         public void EditPartner(int partnerId, PartnerFormModel model)
         {
             var partner = GetPartnerById(partnerId);
-            partner.Photo = GetPhoto(partnerId);
 
             var photo = CreatePhoto(model.File);
 
@@ -156,7 +150,9 @@
         }
 
         public Partner GetPartnerById(int id)
-            => context.Partners.FirstOrDefault(x => x.Id == id);
+            => context.Partners
+            .Include(p=> p.Photo)
+            .FirstOrDefault(x => x.Id == id);
 
         private PartnerPhoto CreatePhoto(IFormFile file)
         {
@@ -190,7 +186,9 @@
             return photo;
         }
 
-        private PartnerPhoto GetPhoto(int partnerId)
-            => context.PartnerPhotos.FirstOrDefault(x => x.PartnerId == partnerId);
+        private List<Partner> GetPartners()
+            => context.Partners
+               .Include(p => p.Photo)
+               .ToList();
     }
 }

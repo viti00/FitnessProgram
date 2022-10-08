@@ -25,5 +25,7 @@
         [Required]
         [MaxLength(PartnerConstants.PromoCodeMaxLegth)]
         public string PromoCode { get; set; }
+
+        public DateTime CreatedOn { get; set; }
     }
 }

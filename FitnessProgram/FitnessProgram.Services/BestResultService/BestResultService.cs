@@ -4,6 +4,7 @@
     using FitnessProgram.Data.Models;
     using FitnessProgram.ViewModels.BestResult;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Caching.Memory;
     using static SharedMethods;
 
@@ -22,7 +23,7 @@
         }
 
 
-        public AllBestResultsQueryModel GetAll(int currPage, int postPerPage, bool isAdministrator)
+        public AllBestResultsQueryModel GetAll(int currPage, int postPerPage, AllBestResultsQueryModel query, bool isAdministrator)
         {
             const string bestResultCache = "BestResultCache";
 
@@ -34,59 +35,52 @@
 
             if (isAdministrator)
             {
-                totalPosts = context.BestResults.Count();
-
-                currPageBestResults = context.BestResults
-                .OrderByDescending(x => x.CreatedOn)
-                .Skip((currPage - 1) * postPerPage)
-                .Take(postPerPage)
-                .Select(x => new BestResultViewModel
-                {
-                    Id = x.Id,
-                    BeforePhotos = x.Photos.Where(x=> x.PhotoType == typeBefore).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
-                    AfterPhotos = x.Photos.Where(x=> x.PhotoType == typeAfter).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
-                    Story = x.Story
-
-                })
-                .ToList();
+                bestResults = GetBestResults();
             }
             else
             {
                 bestResults = cache.Get<List<BestResult>>(bestResultCache);
                 if (bestResults == null)
                 {
-                    bestResults = context.BestResults
-                    .OrderByDescending(x => x.CreatedOn)
-                    .Select(x => new BestResult
-                    {
-                        Id = x.Id,
-                        Photos = x.Photos,
-                        CreatedOn = x.CreatedOn,
-                        Story = x.Story
-                    })
-                    .ToList();
+                    bestResults = GetBestResults();
 
                     var cacheOptions = new MemoryCacheEntryOptions()
-                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
+                        .SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
 
                     cache.Set(bestResultCache, bestResults, cacheOptions);
                 }
-
-                totalPosts = bestResults.Count();
-
-                currPageBestResults = bestResults
-                .Skip((currPage - 1) * postPerPage)
-                .Take(postPerPage)
-                .Select(x => new BestResultViewModel
-                {
-                    Id = x.Id,
-                    BeforePhotos = x.Photos.Where(x => x.PhotoType == typeBefore).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
-                    AfterPhotos = x.Photos.Where(x => x.PhotoType == typeAfter).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
-                    Story = x.Story
-
-                })
-                .ToList();
             }
+
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            {
+                bestResults = bestResults
+                    .Where(p => p.Story.Contains(query.SearchTerm, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            bestResults = query.Sorting switch
+            {
+                Sorting.Default => bestResults.OrderByDescending(x => x.CreatedOn).ToList(),
+                Sorting.DateAscending => bestResults.OrderBy(x => x.CreatedOn).ToList(),
+                _ => bestResults.OrderByDescending(x => x.CreatedOn).ToList()
+            };
+
+            totalPosts = bestResults.Count();
+
+            currPageBestResults = bestResults
+            .Skip((query.CurrentPage - 1) * postPerPage)
+            .Take(postPerPage).ToList()
+            .Select(x => new BestResultViewModel
+            {
+                Id = x.Id,
+                BeforePhotos = x.Photos.Where(x => x.PhotoType == typeBefore).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
+                AfterPhotos = x.Photos.Where(x => x.PhotoType == typeAfter).Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
+                Story = x.Story,
+                CreatedOn = x.CreatedOn
+
+            })
+           .ToList();
+
 
             var maxPage = CalcMaxPage(totalPosts, postPerPage);
 
@@ -96,7 +90,9 @@
             {
                 BestResults = currPageBestResults,
                 CurrentPage = currPage,
-                MaxPage = maxPage
+                MaxPage = maxPage,
+                SearchTerm = query.SearchTerm,
+                Sorting = query.Sorting
             };
 
             return result;
@@ -105,7 +101,6 @@
         public BestResultDetailsModel GetDetails(int bestresultId)
         {
             var bestResult = GetBestResultById(bestresultId);
-            bestResult.Photos = GetPhotos(bestresultId);
 
             var model = new BestResultDetailsModel
             {
@@ -149,8 +144,6 @@
         public void EditBestResult(int bestResultId,BestResultFormModel model)
         {
             var bestResult = GetBestResultById(bestResultId);
-            // get old photos
-            bestResult.Photos = GetPhotos(bestResultId);
 
             var photos = PrepareCreatePhotos(model.BeforeFiles, model.AfterFiles);
 
@@ -167,7 +160,9 @@
         }
 
         public BestResult GetBestResultById(int id)
-            => context.BestResults.FirstOrDefault(x => x.Id == id);
+            => context.BestResults
+            .Include(br=> br.Photos)
+            .FirstOrDefault(x => x.Id == id);
 
 
         private List<BestResultPhoto> PrepareCreatePhotos(IFormFileCollection beforeFiles, IFormFileCollection afterFiles)
@@ -218,7 +213,9 @@
             return photos;
         }
 
-        private List<BestResultPhoto> GetPhotos(int bestResultId)
-            => context.BestResultPhotos.Where(x => x.BestResultId == bestResultId).ToList();
+        private List<BestResult> GetBestResults()
+            => context.BestResults
+               .Include(br => br.Photos)
+               .ToList();
     }
 }

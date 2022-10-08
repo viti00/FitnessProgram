@@ -18,7 +18,7 @@
         {
             var isAdministator = User.IsAdministrator();
 
-            var currPageBestResults = bestResultService.GetAll(query.CurrentPage, AllBestResultsQueryModel.PostPerPage, isAdministator);
+            var currPageBestResults = bestResultService.GetAll(query.CurrentPage, AllBestResultsQueryModel.PostPerPage, query, isAdministator);
 
             return View(currPageBestResults);
         }

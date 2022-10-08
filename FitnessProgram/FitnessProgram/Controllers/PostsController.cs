@@ -27,7 +27,7 @@
         [Authorize]
         public IActionResult MyPosts([FromQuery] AllPostsQueryModel query)
         {
-            var myPosts = postService.GetMy(User.GetId(), query.CurrentPage, AllPostsQueryModel.PostPerPage);
+            var myPosts = postService.GetMy(User.GetId(), query.CurrentPage, AllPostsQueryModel.PostPerPage, query);
 
             return View(myPosts);
         }

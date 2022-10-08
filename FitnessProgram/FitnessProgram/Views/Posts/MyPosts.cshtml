@@ -20,8 +20,15 @@
 <div class="body-section">
     <div class="color-overlay"></div>
     <div class="elements">
-        <div class="row">
-            @if (Model.Posts.Count() == 0)
+        <partial name="_SearchSectionPartial" model="Model" />
+        <div class="row res-container">
+            @if (Model.Posts.Count() == 0 && !string.IsNullOrWhiteSpace(Model.SearchTerm))
+            {
+                <div class="no-post-container">
+                    <h2>There is no posts by the given criteria</h2>
+                </div>
+            }
+            else if (Model.Posts.Count() == 0)
             {
                 <div class="no-post-container">
                     <h2>You have no posts yet</h2>

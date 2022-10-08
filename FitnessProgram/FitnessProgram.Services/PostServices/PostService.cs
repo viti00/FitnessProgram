@@ -9,7 +9,6 @@
     using Microsoft.Extensions.Caching.Memory;
     using static SharedMethods;
     using Microsoft.AspNetCore.Http;
-    using System.Globalization;
     using Microsoft.EntityFrameworkCore;
 
     public class PostService : IPostService
@@ -48,35 +47,25 @@
             context.SaveChanges();
         }
 
-        public AllPostsQueryModel GetMy(string userId, int currPage, int postPerPage)
+        public AllPostsQueryModel GetMy(string userId, int currPage, int postPerPage, AllPostsQueryModel query)
         {
-            int totalPosts = context.Posts.Where(x => x.CreatorId == userId).Count();
+            var postsAll = context.Posts.Where(x => x.CreatorId == userId).ToList();
+
+            int totalPosts = postsAll.Count();
 
             int maxPage = CalcMaxPage(totalPosts, postPerPage);
             currPage = GetCurrPage(currPage, maxPage);
 
-            var myPosts = context.Posts
-                .OrderByDescending(x => x.CreatedOn)
-                .Where(x => x.CreatorId == userId)
-                .Skip((currPage - 1) * postPerPage)
-                .Take(postPerPage)
-                .Select(x => new PostViewModel
-                {
-                    PostId = x.Id,
-                    Title = x.Title,
-                    Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
-                    LikesCount = x.Likes.Count(),
-                    CommentsCount = x.Comments.Count(),
-                    CreatedOn = x.CreatedOn,
-
-                })
-                .ToList();
-            var result = new AllPostsQueryModel
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
             {
-                Posts = myPosts,
-                MaxPage = maxPage,
-                CurrentPage = currPage
-            };
+                postsAll = Search(postsAll, query.SearchTerm);
+            }
+
+            postsAll = Sort(postsAll, query.Sorting);
+
+            var myPosts = CreateViewModel(postsAll, query, postPerPage);
+
+            var result = CreateModel(myPosts, currPage, maxPage, query.SearchTerm, query.Sorting);
 
             return result;
         }
@@ -94,20 +83,14 @@
 
             if (isAdministrator)
             {
-                postsAll = context.Posts
-                    .Include(l => l.Likes)
-                    .Include(c => c.Comments)
-                    .ToList();
+                postsAll = GetPosts();
             }
             else
             {
                 postsAll = cache.Get<List<Post>>(postsCache);
                 if (postsAll == null)
                 {
-                    postsAll = context.Posts
-                        .Include(l => l.Likes)
-                        .Include(c => c.Comments)
-                        .ToList();
+                    postsAll = GetPosts();
 
                     var cacheOptions = new MemoryCacheEntryOptions()
                         .SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
@@ -118,52 +101,21 @@
 
             if (!string.IsNullOrWhiteSpace(query.SearchTerm))
             {
-                postsAll = postsAll
-                    .Where(p => p.Title.Contains(query.SearchTerm, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                postsAll = Search(postsAll, query.SearchTerm);
             }
 
-            postsAll = query.Sorting switch
-            {
-                Sorting.Default => postsAll.OrderByDescending(x => x.CreatedOn).ToList(),
-                Sorting.LikesAscending => postsAll.OrderBy(x => x.Likes.Count()).ToList(),
-                Sorting.LikesDescending => postsAll.OrderByDescending(x => x.Likes.Count()).ToList(),
-                Sorting.CommentsAscending => postsAll.OrderBy(x => x.Comments.Count()).ToList(),
-                Sorting.CommentsDescending => postsAll.OrderByDescending(x => x.Comments.Count()).ToList(),
-                Sorting.DateAscending => postsAll.OrderBy(x => x.CreatedOn).ToList(),
-                _=> postsAll.OrderByDescending(x => x.CreatedOn).ToList()
-            };
+            postsAll = Sort(postsAll, query.Sorting);
 
             totalPosts = postsAll.Count();
 
-            currPagePosts = postsAll
-            .Skip((query.CurrentPage - 1) * postPerPage)
-            .Take(postPerPage).ToList()
-            .Select(x => new PostViewModel
-            {
-                PostId = x.Id,
-                Title = x.Title,
-                Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
-                LikesCount = x.Likes.Count(),
-                CommentsCount = x.Comments.Count(),
-                CreatedOn = x.CreatedOn,
-
-            })
-           .ToList();
+            currPagePosts = CreateViewModel(postsAll, query, postPerPage);
 
 
             var maxPage = CalcMaxPage(totalPosts, postPerPage);
 
             currPage = GetCurrPage(currPage, maxPage);
 
-            var result = new AllPostsQueryModel
-            {
-                Posts = currPagePosts,
-                CurrentPage = currPage,
-                MaxPage = maxPage,
-                SearchTerm = query.SearchTerm,
-                Sorting = query.Sorting
-            };
+            var result = CreateModel(currPagePosts, currPage, maxPage, query.SearchTerm, query.Sorting);
 
             return result;
         }
@@ -220,7 +172,6 @@
         public void Edit(PostFormModel model, string postId)
         {
             var post = GetPostById(postId);
-            post.Photos = GetPhotos(postId); // this method get old photos
 
             var photos = CreatePhotos(model.Files);
 
@@ -247,6 +198,7 @@
 
         public Post GetPostById(string postId)
             => context.Posts
+            .Include(p=> p.Photos)
             .FirstOrDefault(x => x.Id == postId);
 
 
@@ -283,7 +235,59 @@
             return photos;
         }
 
-        private List<PostPhoto> GetPhotos(string postId)
-            => context.PostPhotos.Where(x => x.PostId == postId).ToList();
+        private List<Post> Search(List<Post> postsAll,string searchTerm)
+            => postsAll
+                    .Where(p => p.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+        private List<Post> Sort(List<Post> postsAll, Sorting sorting)
+            => postsAll = sorting switch
+            {
+                Sorting.Default => postsAll.OrderByDescending(x => x.CreatedOn).ToList(),
+                Sorting.LikesAscending => postsAll.OrderBy(x => x.Likes.Count()).ThenByDescending(x=> x.CreatedOn).ToList(),
+                Sorting.LikesDescending => postsAll.OrderByDescending(x => x.Likes.Count()).ThenByDescending(x => x.CreatedOn).ToList(),
+                Sorting.CommentsAscending => postsAll.OrderBy(x => x.Comments.Count()).ThenByDescending(x => x.CreatedOn).ToList(),
+                Sorting.CommentsDescending => postsAll.OrderByDescending(x => x.Comments.Count()).ThenByDescending(x => x.CreatedOn).ToList(),
+                Sorting.DateAscending => postsAll.OrderBy(x => x.CreatedOn).ToList(),
+                _ => postsAll.OrderByDescending(x => x.CreatedOn).ToList()
+            };
+
+        private List<PostViewModel> CreateViewModel(List<Post> postsAll, AllPostsQueryModel query, int postPerPage)
+        {
+            var posts = postsAll
+            .Skip((query.CurrentPage - 1) * postPerPage)
+            .Take(postPerPage).ToList()
+            .Select(x => new PostViewModel
+            {
+                PostId = x.Id,
+                Title = x.Title,
+                Photos = x.Photos.Select(x => Convert.ToBase64String(x.Bytes)).ToList(),
+                LikesCount = x.Likes.Count(),
+                CommentsCount = x.Comments.Count(),
+                CreatedOn = x.CreatedOn,
+
+            })
+           .ToList();
+
+            return posts;
+        }
+
+        private AllPostsQueryModel CreateModel
+            (List<PostViewModel> posts, int currPage,int maxPage, string serchTerm, Sorting sorting)
+            => new AllPostsQueryModel
+            {
+                Posts = posts,
+                CurrentPage = currPage,
+                MaxPage = maxPage,
+                SearchTerm = serchTerm,
+                Sorting = sorting
+            };
+
+        private List<Post> GetPosts()
+            => context.Posts
+               .Include(l => l.Likes)
+               .Include(c => c.Comments)
+               .Include(p => p.Photos)
+               .ToList();
     }
 }
