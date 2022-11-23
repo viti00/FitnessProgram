@@ -40,6 +40,11 @@
         {
             var partner = partnerService.CreateEditModel(id);
 
+            if(partner == null)
+            {
+                return BadRequest();
+            }
+
             return View(partner);
         }
 

@@ -64,8 +64,12 @@
 
             totalPosts = partners.Count();
 
+            var maxPage = CalcMaxPage(totalPosts, postPerPage);
+
+            currPage = GetCurrPage(currPage, ref maxPage);
+
             currPagePartners = partners
-            .Skip((query.CurrentPage - 1) * postPerPage)
+            .Skip((currPage - 1) * postPerPage)
             .Take(postPerPage).ToList()
             .Select(x => new PartnersViewModel
             {
@@ -78,11 +82,6 @@
                 CreatedOn = x.CreatedOn,
             })
            .ToList();
-
-
-            var maxPage = CalcMaxPage(totalPosts, postPerPage);
-
-            currPage = GetCurrPage(currPage, maxPage);
 
             var result = new AllPartnersQueryModel
             {
@@ -118,6 +117,11 @@
         {
             var partner = GetPartnerById(partnerId);
 
+            if(partner == null)
+            {
+                return null;
+            }
+
             var model = new PartnerFormModel
             {
                 Name = partner.Name,
@@ -133,20 +137,26 @@
         {
             var partner = GetPartnerById(partnerId);
 
-            var photo = CreatePhoto(model.File);
+            if(partner != null)
+            {
+                var photo = CreatePhoto(model.File);
 
-            partner.Name = model.Name;
-            partner.Description = model.Description;
-            partner.Photo = photo;
-            partner.Url = model.Url;
-            partner.PromoCode = model.PromoCode;
+                partner.Name = model.Name;
+                partner.Description = model.Description;
+                partner.Photo = photo;
+                partner.Url = model.Url;
+                partner.PromoCode = model.PromoCode;
 
-            context.SaveChanges();
+                context.SaveChanges();
+            }
         }
         public void DeletePartner(Partner partner)
         {
-            context.Partners.Remove(partner);
-            context.SaveChanges();
+            if(partner != null)
+            {
+                context.Partners.Remove(partner);
+                context.SaveChanges();
+            }
         }
 
         public Partner GetPartnerById(int id)

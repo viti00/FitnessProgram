@@ -40,6 +40,11 @@
         {
             var bestResult = bestResultService.CreateEditModel(id);
 
+            if(bestResult == null)
+            {
+                return BadRequest();
+            }
+
             return View(bestResult);
         }
 

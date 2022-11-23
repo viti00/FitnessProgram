@@ -9,7 +9,7 @@
             return maxPage;
         }
 
-        public static int GetCurrPage(int currPage, int maxPage)
+        public static int GetCurrPage(int currPage, ref int maxPage)
         {
             if (currPage > maxPage)
             {

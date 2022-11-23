@@ -67,8 +67,12 @@
 
             totalPosts = bestResults.Count();
 
+            var maxPage = CalcMaxPage(totalPosts, postPerPage);
+
+            currPage = GetCurrPage(currPage, ref maxPage);
+
             currPageBestResults = bestResults
-            .Skip((query.CurrentPage - 1) * postPerPage)
+            .Skip((currPage - 1) * postPerPage)
             .Take(postPerPage).ToList()
             .Select(x => new BestResultViewModel
             {
@@ -80,11 +84,6 @@
 
             })
            .ToList();
-
-
-            var maxPage = CalcMaxPage(totalPosts, postPerPage);
-
-            currPage = GetCurrPage(currPage, maxPage);
 
             var result = new AllBestResultsQueryModel
             {
@@ -101,6 +100,11 @@
         public BestResultDetailsModel GetDetails(int bestresultId)
         {
             var bestResult = GetBestResultById(bestresultId);
+
+            if(bestResult == null)
+            {
+                return null;
+            }
 
             var model = new BestResultDetailsModel
             {
@@ -133,6 +137,11 @@
         {
             var bestResult = GetBestResultById(bestResultId);
 
+            if(bestResult == null)
+            {
+                return null;
+            }
+
             var editModel = new BestResultFormModel
             {
                 Story = bestResult.Story
@@ -155,8 +164,11 @@
 
         public void DeleteBestResult(BestResult bestResult)
         {
-            context.BestResults.Remove(bestResult);
-            context.SaveChanges();
+            if(bestResult != null)
+            {
+                context.BestResults.Remove(bestResult);
+                context.SaveChanges();
+            }
         }
 
         public BestResult GetBestResultById(int id)

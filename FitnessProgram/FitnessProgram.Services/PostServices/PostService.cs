@@ -54,7 +54,7 @@
             int totalPosts = postsAll.Count();
 
             int maxPage = CalcMaxPage(totalPosts, postPerPage);
-            currPage = GetCurrPage(currPage, maxPage);
+            currPage = GetCurrPage(currPage, ref maxPage);
 
             if (!string.IsNullOrWhiteSpace(query.SearchTerm))
             {
@@ -63,7 +63,7 @@
 
             postsAll = Sort(postsAll, query.Sorting);
 
-            var myPosts = CreateViewModel(postsAll, query, postPerPage);
+            var myPosts = CreateViewModel(postsAll, currPage, postPerPage);
 
             var result = CreateModel(myPosts, currPage, maxPage, query.SearchTerm, query.Sorting);
 
@@ -108,12 +108,11 @@
 
             totalPosts = postsAll.Count();
 
-            currPagePosts = CreateViewModel(postsAll, query, postPerPage);
-
-
             var maxPage = CalcMaxPage(totalPosts, postPerPage);
 
-            currPage = GetCurrPage(currPage, maxPage);
+            currPage = GetCurrPage(currPage, ref maxPage);
+
+            currPagePosts = CreateViewModel(postsAll, currPage, postPerPage);
 
             var result = CreateModel(currPagePosts, currPage, maxPage, query.SearchTerm, query.Sorting);
 
@@ -252,10 +251,10 @@
                 _ => postsAll.OrderByDescending(x => x.CreatedOn).ToList()
             };
 
-        private List<PostViewModel> CreateViewModel(List<Post> postsAll, AllPostsQueryModel query, int postPerPage)
+        private List<PostViewModel> CreateViewModel(List<Post> postsAll, int currPage, int postPerPage)
         {
             var posts = postsAll
-            .Skip((query.CurrentPage - 1) * postPerPage)
+            .Skip((currPage - 1) * postPerPage)
             .Take(postPerPage).ToList()
             .Select(x => new PostViewModel
             {

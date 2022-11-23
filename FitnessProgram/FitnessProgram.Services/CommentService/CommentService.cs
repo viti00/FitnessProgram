@@ -14,33 +14,42 @@
 
         public void Comment(string postId, string message, string userId)
         {
-            var comment = new Comment
+            if(!string.IsNullOrEmpty(postId) && !string.IsNullOrEmpty(message) && !string.IsNullOrEmpty(userId))
             {
-                Message = message,
-                CreatedOn = DateTime.Now,
-                PostId = postId,
-                CreatorId = userId
-            };
+                var comment = new Comment
+                {
+                    Message = message,
+                    CreatedOn = DateTime.Now,
+                    PostId = postId,
+                    CreatorId = userId
+                };
 
-            context.Comments.Add(comment);
-            context.SaveChanges();
+                context.Comments.Add(comment);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(int commentId)
         {
             var comment = GetCommentById(commentId);
 
-            context.Comments.Remove(comment);
-            context.SaveChanges();
+            if (comment != null)
+            {
+                context.Comments.Remove(comment);
+                context.SaveChanges();
+            }
         }
 
         public void Edit(int commentId, string message)
         {
             var comment = GetCommentById(commentId);
 
-            comment.Message = message;
+            if(comment != null)
+            {
+                comment.Message = message;
 
-            context.SaveChanges();
+                context.SaveChanges();
+            }
         }
 
         public List<Comment> GetAll(string postId)

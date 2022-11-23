@@ -27,6 +27,11 @@
         {
             var model = bestResultService.GetDetails(id);
 
+            if(model == null)
+            {
+                return BadRequest();
+            }
+
             return View(model);
         }
     }
