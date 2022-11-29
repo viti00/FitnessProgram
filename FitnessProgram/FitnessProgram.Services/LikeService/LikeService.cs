@@ -13,14 +13,6 @@
         public List<UserLikedPost> GetAllLikesForPost(string postId)
             => context.UserLikedPosts.Where(x => x.PostId == postId).ToList();
 
-
-        public UserLikedPost GetLike(string postId, string userId)
-        {
-            var like = context.UserLikedPosts.FirstOrDefault(x => x.PostId == postId && x.UserId == userId);
-
-            return like;
-        }
-
         public string GetLikesCount(string id)
         {
             var likesCount = context.Posts
@@ -33,14 +25,19 @@
 
         public void LikePost(string postId, string userId)
         {
-            var like = new UserLikedPost
-            {
-                UserId = userId,
-                PostId = postId,
-            };
+            var post = context.Posts.FirstOrDefault(x => x.Id == postId);
 
-            context.UserLikedPosts.Add(like);
-            context.SaveChanges();
+            if(post != null && userId != null)
+            {
+                var like = new UserLikedPost
+                {
+                    UserId = userId,
+                    PostId = postId,
+                };
+
+                context.UserLikedPosts.Add(like);
+                context.SaveChanges();
+            }
         }
 
         public void UnlikePost(string postId, string userId)
@@ -49,8 +46,11 @@
                 .Where(x => x.PostId == postId && x.UserId == userId)
                 .FirstOrDefault();
 
-            context.UserLikedPosts.Remove(like);
-            context.SaveChanges();
+            if(like != null)
+            {
+                context.UserLikedPosts.Remove(like);
+                context.SaveChanges();
+            }
         }
     }
 }

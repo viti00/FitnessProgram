@@ -14,19 +14,22 @@
 
         public void BecomeCustomer(CustomerFormModel model, string userId)
         {
-            var customer = new Customer
+            if(userId != null)
             {
-                FullName = model.FullName,
-                PhoneNumber = model.PhoneNumber,
-                Sex = model.Sex,
-                Age = model.Age,
-                DesiredResults = model.DesiredResults,
-                IsApproved = false,
-                UserId = userId
-            };
+                var customer = new Customer
+                {
+                    FullName = model.FullName,
+                    PhoneNumber = model.PhoneNumber,
+                    Sex = model.Sex,
+                    Age = model.Age,
+                    DesiredResults = model.DesiredResults,
+                    IsApproved = false,
+                    UserId = userId
+                };
 
-            context.Customers.Add(customer);
-            context.SaveChanges();
+                context.Customers.Add(customer);
+                context.SaveChanges();
+            }
         }
 
         public List<CustomerViewModel> GetApproved()
@@ -43,13 +46,15 @@
                     DesiredResults = x.DesiredResults,
                     Email = x.User.Email,
                     IsApproved = x.IsApproved
-                }).ToList();
+                })
+                .ToList();
 
             return approved;
         }
 
         public List<CustomerViewModel> GetAwaitingApproval()
         {
+            
             var awaiting = context.Customers
                 .Where(x => x.IsApproved == false)
                 .Select(x => new CustomerViewModel

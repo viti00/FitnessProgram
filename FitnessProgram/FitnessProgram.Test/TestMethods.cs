@@ -1,6 +1,7 @@
 ﻿namespace FitnessProgram.Test
 {
     using FitnessProgram.Data.Models;
+    using FitnessProgram.ViewModels.Customer;
     using Microsoft.Extensions.Caching.Memory;
 
     public static class TestMethods
@@ -40,6 +41,15 @@
 
         public static IEnumerable<Comment> GetComments(string postId)
             => Enumerable.Range(0, 10).Select(x => new Comment { PostId = postId, CreatorId = "", Message = "Test Comments" });
+
+        public static CustomerFormModel GetCustomer()
+            => new CustomerFormModel { FullName = "Pesho Peshev", Age = 20, DesiredResults = "I want to be very strong"};
+
+        public static IEnumerable<User> GetUsers()
+            => Enumerable.Range(0, 10).Select(x=> new User { Email = $"test@abv.bg{x}", UserName = $"test{x}", PasswordHash = "123456" });
+
+        public static IEnumerable<Customer> GetCustomers()
+            => Enumerable.Range(0,9).Select(x => new Customer { FullName = "Pesho Peshev",Age = 20, DesiredResults = "I want to be very strong", User = GetUser(), IsApproved = x%2 == 0?true:false});
 
     }
 }
