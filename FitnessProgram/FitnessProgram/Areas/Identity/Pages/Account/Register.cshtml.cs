@@ -1,13 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using FitnessProgram.Data.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using static FitnessProgram.Global.GlobalConstants;
-
-namespace FitnessProgram.Areas.Identity.Pages.Account
+﻿namespace FitnessProgram.Areas.Identity.Pages.Account
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using FitnessProgram.Data.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using static FitnessProgram.Global.GlobalConstants;
+
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<User> signInManager;
@@ -50,9 +50,12 @@ namespace FitnessProgram.Areas.Identity.Pages.Account
             public IFormFile? File { get; set; }
         }
 
-
         public async Task OnGetAsync(string? returnUrl = null)
         {
+            if (signInManager.IsSignedIn(User))
+            {
+                Response.Redirect("/");
+            }
             ReturnUrl = returnUrl;
         }
 

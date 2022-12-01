@@ -43,6 +43,10 @@ namespace FitnessProgram.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string? returnUrl = null)
         {
+            if (signInManager.IsSignedIn(User))
+            {
+                Response.Redirect("/");
+            }
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);

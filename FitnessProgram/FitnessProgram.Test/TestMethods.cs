@@ -2,6 +2,7 @@
 {
     using FitnessProgram.Data.Models;
     using FitnessProgram.ViewModels.Customer;
+    using FitnessProgram.ViewModels.Post;
     using Microsoft.Extensions.Caching.Memory;
 
     public static class TestMethods
@@ -34,7 +35,7 @@
         }
 
         public static IEnumerable<Post> GetPosts()
-            => Enumerable.Range(0, 10).Select(x => new Post { Title = "Test Posts", Text = "Test Text", CreatorId="" });
+            => Enumerable.Range(0, 10).Select(x => new Post { Title = "Test Posts", Text = "Test Text", Creator= GetUser() });
 
         public static User GetUser()
             => new User { Email = "test@abv.bg", UserName = "test", PasswordHash = "123456" };
@@ -50,6 +51,9 @@
 
         public static IEnumerable<Customer> GetCustomers()
             => Enumerable.Range(0,9).Select(x => new Customer { FullName = "Pesho Peshev",Age = 20, DesiredResults = "I want to be very strong", User = GetUser(), IsApproved = x%2 == 0?true:false});
+
+        public static PostFormModel GetPost()
+            => new PostFormModel { Text = "New Text", Title = "New Title"};
 
     }
 }

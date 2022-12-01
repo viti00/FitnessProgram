@@ -1,11 +1,11 @@
 ﻿function Approve(id) {
-    $.get(`approve/${id}`, (status) => {
+    $.get(`approve/${id}`, () => {
         DeleteRow(id);
     })
 }
 
 function Reject(id) {
-    $.get(`reject/${id}`, (status) => {
+    $.get(`reject/${id}`, () => {
         DeleteRow(id);
     })
 }

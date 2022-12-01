@@ -28,8 +28,4 @@
     <ProjectReference Include="..\FitnessProgram\FitnessProgram.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Route\" />
-  </ItemGroup>
-
 </Project>

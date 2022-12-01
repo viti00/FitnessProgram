@@ -19,6 +19,10 @@
                 }
                 currPage = maxPage;
             }
+            if(currPage == 0)
+            {
+                currPage = 1;
+            }
 
             return currPage;
         }

@@ -8,7 +8,7 @@
     })
         .then((willDelete) => {
             if (willDelete) {
-                $.get(`/comments/delete/${commentId}`, (status) => {
+                $.get(`/comments/delete/${commentId}`, () => {
                     $.get(`/comments/commentscount/${id}`, (count) => {
                         commentsConnection.invoke("DeleteComment", commentId, count);
                     });

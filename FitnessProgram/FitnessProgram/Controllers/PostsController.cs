@@ -48,6 +48,10 @@
                 return View(post);
             }
             var userId = User.GetId();
+            if(userId== null)
+            {
+                return Unauthorized();
+            }
 
             postService.Create(post, userId);
             return RedirectToAction("MyPosts", "Posts");

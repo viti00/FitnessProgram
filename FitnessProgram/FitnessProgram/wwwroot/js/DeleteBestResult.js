@@ -12,10 +12,10 @@
                 swal("The post was deleted!", {
                     icon: "success",
                 })
-                    .then((okay) => {
-                        $.get(`/admin/bestresults/delete/${id}`, (redirect) => {
+                    .then(() => {
+                        $.get(`/admin/bestresults/delete/${id}`, () => {
                             debugger;
-                            window.location.replace("https://localhost:7238/BestResults/All");
+                            window.location.replace("/BestResults/All");
                         });
                     });
 

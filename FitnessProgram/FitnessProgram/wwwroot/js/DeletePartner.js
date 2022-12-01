@@ -12,10 +12,10 @@
                 swal("The post was deleted!", {
                     icon: "success",
                 })
-                    .then((okay) => {
-                        $.get(`/admin/partners/delete/${id}`, (redirect) => {
+                    .then(() => {
+                        $.get(`/admin/partners/delete/${id}`, () => {
                             debugger;
-                            window.location.replace("https://localhost:7238/Partners/All");
+                            window.location.replace("/Partners/All");
                         });
                     });
 

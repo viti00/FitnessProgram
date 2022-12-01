@@ -12,9 +12,9 @@
                 swal("The post was deleted!", {
                     icon: "success",
                 })
-                    .then((okay) => {
-                        $.get(`/posts/delete/${id}`, (redirect) => {
-                            window.location.replace("https://localhost:7238/Posts/All");
+                    .then(() => {
+                        $.get(`/posts/delete/${id}`, () => {
+                            window.location.replace("/Posts/All");
                         });
                     });
 

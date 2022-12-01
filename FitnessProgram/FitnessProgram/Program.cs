@@ -11,6 +11,7 @@ using FitnessProgram.Services.BestResultService;
 using FitnessProgram.Services.PartnerService;
 using FitnessProgram.Controllers.Hubs;
 using FitnessProgram.Services.CustomerService;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,12 +37,12 @@ builder.Services.AddControllersWithViews(options=>
 });
 
 
-builder.Services.AddTransient<IPostService, PostService>();
-builder.Services.AddTransient<ILikeService, LikeService>();
-builder.Services.AddTransient<ICommentService, CommentService>();
-builder.Services.AddTransient<IBestResultService, BestResultService>();
-builder.Services.AddTransient<IPartnerService, PartnerService>();
-builder.Services.AddTransient<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ILikeService, LikeService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IBestResultService, BestResultService>();
+builder.Services.AddScoped<IPartnerService, PartnerService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddSignalR(e=>
 {
     e.MaximumReceiveMessageSize = 102400000;

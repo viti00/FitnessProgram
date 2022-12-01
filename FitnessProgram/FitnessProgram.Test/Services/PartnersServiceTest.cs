@@ -309,8 +309,5 @@
             Assert.IsType<AllPartnersQueryModel>(model);
             Assert.Equal(expectedNameFirstElement, model.Partners.First().Name);
         }
-
-        //TODO: At the end full test for all getAll methods with cache sort search
-        //TODO: At the end test all private methods
     }
 }

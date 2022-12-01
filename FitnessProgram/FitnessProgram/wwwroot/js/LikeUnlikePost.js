@@ -8,7 +8,7 @@
 }
 
 function Like() {
-    $.get(`/likes/likepost/${id}`, (status) => {
+    $.get(`/likes/likepost/${id}`, () => {
         $.get(`/api/likes/${id}`, (likes) => {
             $('#like-btn').text('Liked');
             likesConnection.invoke("CountChanger", likes);
@@ -17,7 +17,7 @@ function Like() {
 }
 
 function UnLike() {
-    $.get(`/likes/unlikepost/${id}`, (status) => {
+    $.get(`/likes/unlikepost/${id}`, () => {
         $.get(`/api/likes/${id}`, (likes) => {
             $('#like-btn').text('Like');
             likesConnection.invoke("CountChanger", likes);

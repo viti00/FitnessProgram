@@ -16,11 +16,15 @@ namespace FitnessProgram.Infrastructure
             }
 
             return id;
-            
+
         }
 
         public static bool IsAdministrator(this ClaimsPrincipal user)
         {
+            if (user == null)
+            {
+                return false;
+            }
             return user.IsInRole(AdministratorRoleName);
         }
     }
