@@ -1,43 +1,14 @@
 ﻿@model BestResultFormModel
 
 @{
-    ViewBag.Title = "Add Best Result";
+    ViewBag.Title = "Create Best Result";
+    ViewBag.ButtonName = "Post";
 }
 
 @section Styles{
     <link rel="stylesheet" href="~/css/AllCreateAndEditPages.css" />
 }
-
-<div class="section">
-    <div class="color-overlay"></div>
-    <div class="wrapper col-sm-12 col-md-10 offset-md-1 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
-        <form method="post" asp-area="Admin" enctype="multipart/form-data">
-            <div class="logo">
-                <img src="~/lib/Images/logo.png" alt="">
-            </div>
-            <div class="text-center mt-4 name">
-                <h2>Create Best Result</h2>
-            </div>
-            <div class="form-group">
-                <label asp-for=BeforeFiles>Photos Before<span class="text-danger">*</span></label>
-                <input asp-for="BeforeFiles" class="form-control" type="file" multiple>
-                <span asp-validation-for="BeforeFiles" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for=AfterFiles>Photos After<span class="text-danger">*</span></label>
-                <input asp-for="AfterFiles" class="form-control" type="file" multiple>
-                <span asp-validation-for="AfterFiles" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for=Story>Story<span class="text-danger">*</span></label>
-                <textarea rows="3" asp-for="Story" class="form-control" placeholder="George started my program..."></textarea>
-                <span asp-validation-for="Story" class="small text-danger"></span>
-            </div>
-            <button type="submit" class="btn custom-btn">Add</button>
-        </form>
-    </div>
-
-</div>
+<partial name="_BestResultsAddAndEditPartial" model="@Model"/>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
