@@ -3,6 +3,7 @@
     using FitnessProgram.Data.Models;
     using FitnessProgram.ViewModels.Customer;
     using FitnessProgram.ViewModels.Post;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Caching.Memory;
 
     public static class TestMethods
@@ -35,7 +36,7 @@
         }
 
         public static IEnumerable<Post> GetPosts()
-            => Enumerable.Range(0, 10).Select(x => new Post { Title = "Test Posts", Text = "Test Text", Creator= GetUser() });
+            => Enumerable.Range(0, 10).Select(x => new Post { Title = "Test Posts", Text = "Test Text", Creator= GetUser()});
 
         public static User GetUser()
             => new User { Email = "test@abv.bg", UserName = "test", PasswordHash = "123456" };
@@ -54,6 +55,13 @@
 
         public static PostFormModel GetPost()
             => new PostFormModel { Text = "New Text", Title = "New Title"};
+
+        public static FormFile GetFormFile(string name, string fileName)
+        {
+            Stream stream = new MemoryStream();
+
+            return  new FormFile(stream, 2, 10, name, fileName);
+        }
 
     }
 }

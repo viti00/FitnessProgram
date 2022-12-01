@@ -4,6 +4,7 @@
     using FitnessProgram.Services.PartnerService;
     using FitnessProgram.Test.Mocks;
     using FitnessProgram.ViewModels.Partner;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
     public class PartnersServiceTest
     {
@@ -308,6 +309,19 @@
             Assert.NotNull(model);
             Assert.IsType<AllPartnersQueryModel>(model);
             Assert.Equal(expectedNameFirstElement, model.Partners.First().Name);
+        }
+        [Fact]
+        public void AddPartnerShoudAddPhotoFromFile()
+        {
+            using var data = DatabaseMock.Instance;
+            var partnerService = new PartnerService(data, GetMemoryCache());
+
+            partnerService.AddPartner(new PartnerFormModel { Description = "abcefghijk", Name = "Above", PromoCode = "promo", Url = "/", File = GetFormFile("first", "first") });
+            var partner = data.Partners.First();
+
+            Assert.NotNull(partner);
+            Assert.IsType<Partner>(partner);
+            Assert.NotNull(partner.Photo);
         }
     }
 }

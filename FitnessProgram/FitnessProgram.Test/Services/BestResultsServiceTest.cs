@@ -4,6 +4,9 @@
     using FitnessProgram.Services.BestResultService;
     using FitnessProgram.Test.Mocks;
     using FitnessProgram.ViewModels.BestResult;
+    using Microsoft.AspNetCore.Http;
+    using Moq;
+    using Xunit.Sdk;
 
     public class BestResultsServiceTest
     {
@@ -311,6 +314,21 @@
             Assert.IsType<AllBestResultsQueryModel>(model);
             Assert.Equal(expectedStoryFirstElement, model.BestResults.First().Story);
 
+        }
+
+        [Fact]
+        public void AddBestResultShoudAddPhotosFromFileSystem()
+        {
+            int expected = 2;
+            using var data = DatabaseMock.Instance;
+            var bestResultService = new BestResultService(data, GetMemoryCache());
+
+            bestResultService.AddBestResult(new BestResultFormModel { Story = "New Story", AfterFiles = new FormFileCollection { GetFormFile("first", "first") }, BeforeFiles = new FormFileCollection {GetFormFile("second", "second") } });
+            var bestResult = data.BestResults.First();
+
+            Assert.NotNull(bestResult);
+            Assert.IsType<BestResult>(bestResult);
+            Assert.Equal(expected, bestResult.Photos.Count());
         }
     }
 }

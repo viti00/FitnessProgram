@@ -6,7 +6,7 @@
     using FitnessProgram.Services.PostServices;
     using FitnessProgram.Test.Mocks;
     using FitnessProgram.ViewModels.Post;
-    using Moq;
+    using Microsoft.AspNetCore.Http;
 
     public class PostsServiceTest
     {
@@ -451,6 +451,23 @@
             var result = postService.GetAll(1, 6, new AllPostsQueryModel { Sorting = sorting }, false);
 
             Assert.Equal(expectedTitleFirstPost, result.Posts.First().Title);
+        }
+        [Fact]
+        public void CreateShoudAddPhotosFromFileCollection()
+        {
+            int expected = 1;
+            var data = DatabaseMock.Instance;
+            var cache = GetMemoryCache();
+            var commentSevvice = new CommentService(data);
+            var likeSevvice = new LikeService(data);
+            var postService = new PostService(data, commentSevvice, likeSevvice, cache);
+
+            postService.Create(new PostFormModel { Title = "new title", Text = "new text", Files = new FormFileCollection { GetFormFile("first", "first") } }, GetUser().Id);
+            var post = data.Posts.First();
+
+            Assert.NotNull(post);
+            Assert.IsType<Post>(post);
+            Assert.Equal(expected, post.Photos.Count());
         }
     }
 }
