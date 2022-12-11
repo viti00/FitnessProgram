@@ -49,7 +49,12 @@
 
         public AllPostsQueryModel GetMy(string userId, int currPage, int postPerPage, AllPostsQueryModel query)
         {
-            var postsAll = context.Posts.Where(x => x.CreatorId == userId).ToList();
+            var postsAll = context.Posts
+                                  .Where(x => x.CreatorId == userId)
+                                  .Include(x=> x.Photos)
+                                  .Include(x=> x.Likes)
+                                  .Include(x=> x.Comments)
+                                  .ToList();
 
             int totalPosts = postsAll.Count();
 

@@ -3,9 +3,42 @@
     using FitnessProgram.Services.CustomerService;
     using FitnessProgram.Test.Mocks;
     using FitnessProgram.ViewModels.Customer;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
     public class CustomersServiceTest
     {
+        [Fact]
+        public void BecomeCustomerShoudReturnFalseIfUserAlreadySubmittedRequest()
+        {
+            var expected = false;
+            using var data = DatabaseMock.Instance;
+            var customerService = new CustomerService(data);
+            data.Users.Add(GetUser());
+            data.SaveChanges();
+            var userId = data.Users.First().Id;
+            data.Customers.Add(GetCustomer(userId));
+            data.SaveChanges();
+
+            var result = customerService.BecomeCustomer(GetCustomerFormModel(), userId);
+
+            Assert.IsType<bool>(result);
+            Assert.Equal(expected, result);
+        }
+        [Fact]
+        public void BecomeCustomerShoudReturnTrueIfUserStilNotSubmittedRequest()
+        {
+            var expected = true;
+            using var data = DatabaseMock.Instance;
+            var customerService = new CustomerService(data);
+            data.Users.Add(GetUser());
+            data.SaveChanges();
+            var userId = data.Users.First().Id;
+
+            var result = customerService.BecomeCustomer(GetCustomerFormModel(), userId);
+
+            Assert.IsType<bool>(result);
+            Assert.Equal(expected, result);
+        }
         [Fact]
         public void BecomeCustomerShoudAddNewCustomerToDatabaseIfUserExists()
         {

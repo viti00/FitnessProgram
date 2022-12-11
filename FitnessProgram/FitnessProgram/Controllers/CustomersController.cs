@@ -23,7 +23,11 @@
         [HttpPost]
         public IActionResult Create(CustomerFormModel model)
         {
-            customerService.BecomeCustomer(model, User.GetId());
+            if(!customerService.BecomeCustomer(model, User.GetId()))
+            {
+                ModelState.AddModelError(string.Empty, "You have already submitted a request");
+                return View(model);
+            }
 
             return RedirectToAction("Index", "Home");
         }

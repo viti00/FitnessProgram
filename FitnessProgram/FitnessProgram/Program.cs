@@ -11,11 +11,10 @@ using FitnessProgram.Services.BestResultService;
 using FitnessProgram.Services.PartnerService;
 using FitnessProgram.Controllers.Hubs;
 using FitnessProgram.Services.CustomerService;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("FitnessProgramDbContextConnection");
 builder.Services.AddDbContext<FitnessProgramDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -60,6 +59,8 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+
 
 app.PrepareDatabase();
 

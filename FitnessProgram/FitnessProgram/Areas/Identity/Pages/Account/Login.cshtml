@@ -31,17 +31,14 @@
                     <input asp-for="Input.Password" type="password" autocomplete="new-password" class="form-control">
                     <span asp-validation-for="Input.Password" class="small text-danger"></span>
                 </div>
-                <div>
-                    <div class="checkbox">
-                        <label asp-for="Input.RememberMe" class="form-label">
-                            <input class="form-check-input" asp-for="Input.RememberMe" />
-                            @Html.DisplayNameFor(m => m.Input.RememberMe)
-                        </label>
-                    </div>
-                </div>
+                <a asp-page="ForgotPassword" style="color: black">Forgot password?</a>
 
                 <button type="submit" class="btn custom-btn">Login</button>
             </form>
+            <div style="height: 100%" class="text-center mt-3">
+                <a asp-page="Register" style="color:black;">Create Account</a>
+            </div>
+             
         </div>
 
     </div>

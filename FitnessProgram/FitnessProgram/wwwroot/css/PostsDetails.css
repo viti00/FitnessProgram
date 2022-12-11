@@ -35,14 +35,6 @@
         background: red;
     }
 
-.creator-photo:hover{
-    transform: scale(2.5);
-    margin-top: 50px;
-    transform-origin: bottom;
-    transform-origin: left;
-    z-index: 1;
-}
-
 .post-creator-photo:hover{
     transform: scale(2.5);
     z-index: 1;

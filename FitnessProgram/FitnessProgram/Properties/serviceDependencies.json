@@ -4,13 +4,18 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:DefaultConnection"
     },
-    "secrets1": {
-      "type": "secrets"
-    },
     "mssql2": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:FitnessProgram",
       "dynamicId": null
+    },
+    "signalr1": {
+      "type": "signalr",
+      "connectionId": "Azure:SignalR:ConnectionString"
+    },
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "AzureConnection"
     }
   }
 }

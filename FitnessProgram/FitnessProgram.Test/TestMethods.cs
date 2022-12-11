@@ -11,6 +11,12 @@
         public static IEnumerable<BestResult> GetBestResults()
              => Enumerable.Range(0, 10).Select(x => new BestResult { Story = "Test Story Text" });
 
+        public static Customer GetCustomer(string userId)
+            => new Customer { Age = 20, FullName = "pesho peshev", Sex = "Male", PhoneNumber = "3232323232", DesiredResults = "abcddcba", UserId=userId, IsApproved = false };
+
+        public static CustomerFormModel GetCustomerFormModel()
+            => new CustomerFormModel { Age = 20, FullName = "pesho peshev", Sex = "Male", PhoneNumber = "3232323232", DesiredResults = "abcddcba" };
+
         public static IEnumerable<Partner> GetPartners()
             => Enumerable.Range(0, 10)
                          .Select(x => new Partner

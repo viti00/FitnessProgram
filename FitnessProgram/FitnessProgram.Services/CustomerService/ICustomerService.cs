@@ -4,7 +4,7 @@
 
     public interface ICustomerService
     {
-        public void BecomeCustomer(CustomerFormModel model, string userId);
+        public bool BecomeCustomer(CustomerFormModel model, string userId);
 
         public List<CustomerViewModel> GetApproved();
 

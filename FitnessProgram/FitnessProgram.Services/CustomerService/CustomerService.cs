@@ -12,8 +12,12 @@
         public CustomerService(FitnessProgramDbContext context)
             => this.context = context;
 
-        public void BecomeCustomer(CustomerFormModel model, string userId)
+        public bool BecomeCustomer(CustomerFormModel model, string userId)
         {
+            if(context.Customers.Any(x=> x.UserId == userId))
+            {
+                return false;
+            }
             if(userId != null)
             {
                 var customer = new Customer
@@ -30,6 +34,8 @@
                 context.Customers.Add(customer);
                 context.SaveChanges();
             }
+
+            return true;
         }
 
         public List<CustomerViewModel> GetApproved()

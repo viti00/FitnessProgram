@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using FitnessProgram.Data.Models;
-
+﻿
 namespace FitnessProgram.Areas.Identity.Pages.Account
 {
+    using System.ComponentModel.DataAnnotations;
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using FitnessProgram.Data.Models;
+
     public class LoginModel : PageModel
     {
         private readonly SignInManager<User> signInManager;
@@ -37,8 +38,8 @@ namespace FitnessProgram.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            [Display(Name = "Remember Me?")]
-            public bool RememberMe { get; set; }
+            //[Display(Name = "Remember Me?")]
+            //public bool RememberMe { get; set; }
         }
 
         public async Task OnGetAsync(string? returnUrl = null)
@@ -68,7 +69,7 @@ namespace FitnessProgram.Areas.Identity.Pages.Account
             {
                 var user = await userManager.FindByNameAsync(Input.UserName);
 
-                var result = await signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await signInManager.PasswordSignInAsync(Input.UserName, Input.Password, true, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     if (await userManager.IsInRoleAsync(user, WebConstants.AdministratorRoleName))

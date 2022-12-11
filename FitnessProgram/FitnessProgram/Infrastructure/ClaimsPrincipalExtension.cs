@@ -28,5 +28,4 @@ namespace FitnessProgram.Infrastructure
             return user.IsInRole(AdministratorRoleName);
         }
     }
-
 }
