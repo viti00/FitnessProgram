@@ -11,6 +11,7 @@ using FitnessProgram.Services.BestResultService;
 using FitnessProgram.Services.PartnerService;
 using FitnessProgram.Controllers.Hubs;
 using FitnessProgram.Services.CustomerService;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
