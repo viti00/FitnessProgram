@@ -1,11 +1,11 @@
-﻿using FitnessProgram.Data;
-using FitnessProgram.Data.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using static FitnessProgram.WebConstants;
-
-namespace FitnessProgram.Infrastructure
+﻿namespace FitnessProgram.Infrastructure
 {
+    using FitnessProgram.Data;
+    using FitnessProgram.Data.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using static FitnessProgram.WebConstants;
+
     public static class ApplicationBuilderExtension
     {
         public static IApplicationBuilder PrepareDatabase(

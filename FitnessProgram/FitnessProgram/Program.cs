@@ -2,16 +2,10 @@ using FitnessProgram.Infrastructure;
 using FitnessProgram.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using FitnessProgram.Services.PostServices;
 using FitnessProgram.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using FitnessProgram.Services.LikeService;
-using FitnessProgram.Services.CommentService;
-using FitnessProgram.Services.BestResultService;
-using FitnessProgram.Services.PartnerService;
 using FitnessProgram.Controllers.Hubs;
-using FitnessProgram.Services.CustomerService;
-using Azure.Identity;
+using static FitnessProgram.Infrastructure.FitnessProgramApiServiceCollectionExtension;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,18 +30,7 @@ builder.Services.AddControllersWithViews(options=>
     options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
 });
 
-
-builder.Services.AddScoped<IPostService, PostService>();
-builder.Services.AddScoped<ILikeService, LikeService>();
-builder.Services.AddScoped<ICommentService, CommentService>();
-builder.Services.AddScoped<IBestResultService, BestResultService>();
-builder.Services.AddScoped<IPartnerService, PartnerService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddSignalR(e=>
-{
-    e.MaximumReceiveMessageSize = 102400000;
-});
-builder.Services.AddMemoryCache();
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
